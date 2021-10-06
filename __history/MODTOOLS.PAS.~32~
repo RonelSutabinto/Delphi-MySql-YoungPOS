@@ -1,0 +1,1109 @@
+{$I-,V-,S-}
+
+Unit ModTools;
+
+
+// Manny Constantino's Delphi Toolbox
+// created December 31, 2001
+
+Interface
+
+Type
+St = String[255];
+Var
+I,J,K,L,M,N,O    : Integer;
+PageCount        : Word;
+LineCount        : Word;
+codeDeleteMaster : String;
+DBlog            : Integer;
+
+function cwLeftPad(aString:string; aCharCount:integer; aChar:String): string;
+Function Format(a : Currency; s : String) : String;
+Function AmountWord(Amount : Currency) : String;
+Function NumToWords(dblValue : Double) : String;
+Function FormRead(a : Integer; s : String) : String;
+function JustStr(Source : St; FillCh : char;
+                              FieldSize : integer;
+                              JustCode : integer) : St;
+Function MonString(A : String) : String;
+function BillMonthVal(Data : String):String;
+function  referenceNo(code : String; dateStr : String;amntCmp : Double): String;
+function NTW(ChkER: boolean; ER: string; D: double): string;
+Implementation
+
+uses SysUtils, dataMod,System.StrUtils,Dialogs;
+
+Function  Format;
+var
+st : String;
+ls : Integer;
+DS : String;
+I  : Integer;
+
+begin
+ls := Length(s);
+j  := ls;
+Str(a:ls:2,St);
+
+for i := ls downto 1 do
+begin
+if s[i] = '#' then
+ begin
+ s[i] := st[j];
+ j := j - 1;
+ end
+ else
+ begin
+ if st[j] = '.' then j := j - 1;
+ end;
+
+if s[i] = '-' then s[i] := ' ';
+if (s[i+1] = ' ') and (s[i] = ',') then s[i] := ' ';
+if ((s[i-1] = ' ') or (St[j] = '-') or (St[j] = ' ')) and (s[i] = ',') then s[i] := ' ';
+end;
+
+if a < 0 then
+   format := '(' + s  + ')'
+   else
+   format := ' ' + s + ' ';
+
+if a = 0 then
+  begin
+   DS := '';
+   Format := '';
+   DS := JustStr(DS,' ',LS-1,0);
+   Format := ' '+DS+'  ';
+  end;
+end;
+
+//=================================
+//=================================
+//=================================
+function NTW(ChkER: boolean; ER: string; D: double): string;
+const
+  Ones: array[0..9] of string = ('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine');
+  Teens: array[10..19] of string = ('Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen');
+  Tens: array[2..9] of string = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety');
+  Suffix: array[0..5] of string = ('Hundred', 'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion');
+var RStr, sDec, sFrac: string;
+    vFrac: double;
+    I, vDec : integer;
+    TruncTens, TruncHund, TruncThou, TruncMio, TruncBio, TruncTril, iD: Int64;
+    ReadFrac: boolean;
+    function fTensENG(xD: integer): string;
+    var BTStr: string;
+    begin
+       if (xD >= 0) and (xD <= 9) then BTStr := Ones[xD] else
+       if (xD >= 10) and (xD <= 19) then BTStr := Teens[xD] else
+       if (xD >= 20) and (xD <= 99) then
+       begin
+          if (StrToInt(RightStr(IntToStr(xD), 1)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' +
+                      Ones[StrToInt(RightStr(IntToStr(xD), 1))]
+       end;
+       Result := BTStr;
+    end;
+    function fHundENG(xD: integer): string;
+    var BTStr: string;
+    begin
+       BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0];
+       TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+       if (TruncTens <> 0) then
+          BTStr := BTStr + ' ' + fTensENG(TruncTens);
+          //BTStr := BTStr + ' and ' + fTensENG(TruncTens);
+       Result := BTStr;
+    end;
+    function fThouENG(xD: Integer): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000) and (xD <= 9999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + ' ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+             //BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ' ' + fHundENG(TruncHund);
+             //BTStr := BTStr + ', ' + fHundENG(TruncHund);
+
+       end
+       else
+       if (Trunc(xD) >= 10000) and (Trunc(xD) <= 19999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+            BTStr := BTStr + ' ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+            // BTStr := BTStr + ' and ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ' ' + fHundENG(TruncHund);
+             //BTStr := BTStr + ', ' + fHundENG(TruncHund);
+
+       end
+       else
+       if (Trunc(xD) >= 20000) and (Trunc(xD) <= 99999) then
+       begin
+          if (StrToInt(MidStr(IntToStr(xD), 2, 1)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[1]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' +
+                      Ones[StrToInt(MidStr(IntToStr(xD), 2, 1))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + ' ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+             //BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ' ' + fHundENG(TruncHund);
+             //BTStr := BTStr + ', ' + fHundENG(TruncHund);
+
+       end
+       else
+       if (xD >= 100000) and (xD <= 9999999) then
+       begin
+          BTStr := fHundENG(StrToInt(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + ' ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+             //BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ' ' + fHundENG(TruncHund);
+             //BTStr := BTStr + ', ' + fHundENG(TruncHund);
+       end;
+       Result := BTStr;
+    end;
+    function fMioENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000) and (xD <= 9999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ' ' + fThouENG(TruncThou);
+             //BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 10000000) and (xD <= 19999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ' ' + fThouENG(TruncThou);
+             //BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 20000000) and (xD <= 99999999) then
+       begin
+          if (StrToInt(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ' ' + fThouENG(TruncThou);
+             //BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 100000000) and (xD <= 999999999) then
+       begin
+          BTStr := fHundENG(StrToInt(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ' ' + fThouENG(TruncThou);
+             //BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       begin
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + fThouENG(TruncThou);
+       end;
+       Result := BTStr;
+    end;
+    function fBioENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000) and (xD <= 9999999999) then
+       begin
+          BTStr := Ones[StrToInt64(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ' ' + fMioENG(TruncMio);
+             //BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 10000000000) and (xD <= 19999999999) then
+       begin
+          BTStr := Teens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ' ' + fMioENG(TruncMio);
+             //BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 20000000000) and (xD <= 99999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ' ' + fMioENG(TruncMio);
+             //BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 100000000000) and (xD <= 999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ' ' + fMioENG(TruncMio);
+             //BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       begin
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + fMioENG(TruncMio);
+       end;
+       Result := BTStr;
+    end;
+    function fTrilENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000000) and (xD <= 9999999999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ' ' + fBioENG(TruncBio);
+             //BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 10000000000000) and (xD <= 19999999999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ' ' + fBioENG(TruncBio);
+             //BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 20000000000000) and (xD <= 99999999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 100000000000000) and (xD <= 999999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       begin
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + fBioENG(TruncBio);
+       end;
+       Result := BTStr;
+    end;
+    function fQuadENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000000000) and (xD <= 9999999999999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 10000000000000000) and (xD <= 19999999999999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 20000000000000000) and (xD <= 99999999999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 100000000000000000) and (xD <= 999999999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end;;
+       Result := BTStr;
+    end;
+begin
+   iD := abs(Trunc(D));
+   if (iD >= 0) and (iD <= 99) then RStr := fTensENG(iD) else
+   if (iD >= 100) and (iD <= 999) then Rstr := RStr + fHundENG(iD) else
+   if (iD >= 1000) and (iD <= 999999) then RStr := RStr + fThouENG(iD) else
+   if (iD >= 1000000) and (iD <= 999999999) then RStr := RStr + fMioENG(iD) else
+   if (iD >= 1000000000) and (iD <= 999999999999) then RStr := RStr + fBioENG(iD) else
+   if (iD >= 1000000000000) and (iD <= 999999999999999) then RStr := RStr + fTrilENG(iD) else
+   if (iD >= 1000000000000000) and (iD <= 999999999999999999) then RStr := RStr + fQuadENG(iD);
+   if ChkER then RStr := RStr + ' ' + ER;
+   vFrac := Frac(D);
+   if (vFrac <> 0) then
+   begin
+      sDec := FormatFloat('0.000000', vFrac);
+      if ChkER then
+      begin
+         sDec := MidStr(sDec, 3, 2);
+         vDec := StrToInt(sDec);
+         if (vDec > 0) then RStr := RStr + ' and ' + fTensENG(vDec) + ' cents.';
+      end
+      else
+      begin
+         RStr := RStr + ' point ';
+         ReadFrac := False;
+         sFrac := '';
+         for I := Length(sDec) downto 3 do
+         begin
+            if (sDec[I] <> '0') then ReadFrac := True;
+            if ReadFrac then sFrac := Ones[StrToInt(sDec[I])] + ' ' + sFrac;
+         end;
+         RStr := RStr + sFrac;
+      end;
+   end;
+   Result := RStr;
+end;
+
+
+{
+function NTW(ChkER: boolean; ER: string; D: double): string;
+const
+  Ones: array[0..9] of string = ('Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine');
+  Teens: array[10..19] of string = ('Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen');
+  Tens: array[2..9] of string = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety');
+  Suffix: array[0..5] of string = ('Hundred', 'Thousand', 'Million', 'Billion', 'Trillion', 'Quadrillion');
+var RStr, sDec, sFrac: string;
+    vFrac: double;
+    I, vDec : integer;
+    TruncTens, TruncHund, TruncThou, TruncMio, TruncBio, TruncTril, iD: Int64;
+    ReadFrac: boolean;
+    function fTensENG(xD: integer): string;
+    var BTStr: string;
+    begin
+       if (xD >= 0) and (xD <= 9) then BTStr := Ones[xD] else
+       if (xD >= 10) and (xD <= 19) then BTStr := Teens[xD] else
+       if (xD >= 20) and (xD <= 99) then
+       begin
+          if (StrToInt(RightStr(IntToStr(xD), 1)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' +
+                      Ones[StrToInt(RightStr(IntToStr(xD), 1))]
+       end;
+       Result := BTStr;
+    end;
+    function fHundENG(xD: integer): string;
+    var BTStr: string;
+    begin
+       BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0];
+       TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+       if (TruncTens <> 0) then
+          BTStr := BTStr + ' and ' + fTensENG(TruncTens);
+       Result := BTStr;
+    end;
+    function fThouENG(xD: Integer): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000) and (xD <= 9999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ', ' + fHundENG(TruncHund);
+       end
+       else
+       if (Trunc(xD) >= 10000) and (Trunc(xD) <= 19999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + ' and ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ', ' + fHundENG(TruncHund);
+       end
+       else
+       if (Trunc(xD) >= 20000) and (Trunc(xD) <= 99999) then
+       begin
+          if (StrToInt(MidStr(IntToStr(xD), 2, 1)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[1]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' +
+                      Ones[StrToInt(MidStr(IntToStr(xD), 2, 1))] + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(TruncHund), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ', ' + fHundENG(TruncHund);
+       end
+       else
+       if (xD >= 100000) and (xD <= 9999999) then
+       begin
+          BTStr := fHundENG(StrToInt(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[1];
+          TruncHund := StrToInt(RightStr(IntToStr(xD), 3));
+          TruncTens := StrToInt(RightStr(IntToStr(xD), 2));
+          if (TruncHund <> 0) and (TruncTens = 0) then
+             BTStr := BTStr + 'and ' + Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[0]
+          else
+          if (TruncHund <> 0) and (TruncTens <> 0) then
+             BTStr := BTStr + ', ' + fHundENG(TruncHund);
+       end;
+       Result := BTStr;
+    end;
+    function fMioENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000) and (xD <= 9999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 10000000) and (xD <= 19999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 20000000) and (xD <= 99999999) then
+       begin
+          if (StrToInt(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2]
+          else
+             BTStr := Tens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       if (xD >= 100000000) and (xD <= 999999999) then
+       begin
+          BTStr := fHundENG(StrToInt(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[2];
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + ', ' + fThouENG(TruncThou);
+       end
+       else
+       begin
+          TruncThou := StrToInt(RightStr(IntToStr(xD), 6));
+          if (TruncThou <> 0) then
+             BTStr := BTStr + fThouENG(TruncThou);
+       end;
+       Result := BTStr;
+    end;
+    function fBioENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000) and (xD <= 9999999999) then
+       begin
+          BTStr := Ones[StrToInt64(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 10000000000) and (xD <= 19999999999) then
+       begin
+          BTStr := Teens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 20000000000) and (xD <= 99999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       if (xD >= 100000000000) and (xD <= 999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[3];
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + ', ' + fMioENG(TruncMio);
+       end
+       else
+       begin
+          TruncMio := StrToInt64(RightStr(IntToStr(xD), 9));
+          if (TruncMio <> 0) then
+             BTStr := BTStr + fMioENG(TruncMio);
+       end;
+       Result := BTStr;
+    end;
+    function fTrilENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000000) and (xD <= 9999999999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 10000000000000) and (xD <= 19999999999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 20000000000000) and (xD <= 99999999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       if (xD >= 100000000000000) and (xD <= 999999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[4];
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + ', ' + fBioENG(TruncBio);
+       end
+       else
+       begin
+          TruncBio := StrToInt64(RightStr(IntToStr(xD), 12));
+          if (TruncBio <> 0) then
+             BTStr := BTStr + fBioENG(TruncBio);
+       end;
+       Result := BTStr;
+    end;
+    function fQuadENG(xD: Int64): string;
+    var BTStr: string;
+    begin
+       if (xD >= 1000000000000000) and (xD <= 9999999999999999) then
+       begin
+          BTStr := Ones[StrToInt(LeftStr(IntToStr(xD), 1))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 10000000000000000) and (xD <= 19999999999999999) then
+       begin
+          BTStr := Teens[StrToInt(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 20000000000000000) and (xD <= 99999999999999999) then
+       begin
+          if (StrToInt64(LeftStr(IntToStr(xD), 2)) = 0) then
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5]
+          else
+             BTStr := Tens[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' +
+                      Ones[StrToInt64(LeftStr(IntToStr(xD), 2))] + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end
+       else
+       if (xD >= 100000000000000000) and (xD <= 999999999999999999) then
+       begin
+          BTStr := fHundENG(StrToInt64(LeftStr(IntToStr(xD), 3))) + ' ' + Suffix[5];
+          TruncTril := StrToInt64(RightStr(IntToStr(xD), 15));
+          if (TruncTril <> 0) then
+             BTStr := BTStr + ', ' + fTrilENG(TruncTril);
+       end;;
+       Result := BTStr;
+    end;
+begin
+   iD := abs(Trunc(D));
+   if (iD >= 0) and (iD <= 99) then RStr := fTensENG(iD) else
+   if (iD >= 100) and (iD <= 999) then Rstr := RStr + fHundENG(iD) else
+   if (iD >= 1000) and (iD <= 999999) then RStr := RStr + fThouENG(iD) else
+   if (iD >= 1000000) and (iD <= 999999999) then RStr := RStr + fMioENG(iD) else
+   if (iD >= 1000000000) and (iD <= 999999999999) then RStr := RStr + fBioENG(iD) else
+   if (iD >= 1000000000000) and (iD <= 999999999999999) then RStr := RStr + fTrilENG(iD) else
+   if (iD >= 1000000000000000) and (iD <= 999999999999999999) then RStr := RStr + fQuadENG(iD);
+   if ChkER then RStr := RStr + ' ' + ER;
+   vFrac := Frac(D);
+   if (vFrac <> 0) then
+   begin
+      sDec := FormatFloat('0.000000', vFrac);
+      if ChkER then
+      begin
+         sDec := MidStr(sDec, 3, 2);
+         vDec := StrToInt(sDec);
+         if (vDec > 0) then RStr := RStr + ' and ' + fTensENG(vDec) + ' cents.';
+      end
+      else
+      begin
+         RStr := RStr + ' point ';
+         ReadFrac := False;
+         sFrac := '';
+         for I := Length(sDec) downto 3 do
+         begin
+            if (sDec[I] <> '0') then ReadFrac := True;
+            if ReadFrac then sFrac := Ones[StrToInt(sDec[I])] + ' ' + sFrac;
+         end;
+         RStr := RStr + sFrac;
+      end;
+   end;
+   Result := RStr;
+end;
+}
+//=================================
+//=================================
+//=================================
+
+
+
+Function NumToWords(dblValue : Double) : String;
+var
+  ones : array[0..9] of String;
+  teens : array[0..9] of String;
+  tens : array[0..9] of String;
+  thousands : array[0..4] of String;
+  i, nPosition, nDigit, bAllZeros : Integer;
+  strResult, strTemp, tmpBuff : String;
+
+begin
+
+  ones[0] := 'ZERO';
+  ones[1] := 'ONE';
+  ones[2] := 'TWO';
+  ones[3] := 'THREE';
+  ones[4] := 'FOUR';
+  ones[5] := 'FIVE';
+  ones[6] := 'SIX';
+  ones[7] := 'SEVEN';
+  ones[8] := 'EIGHT';
+  ones[9] := 'NINE';
+
+  teens[0] := 'TEN';
+  teens[1] := 'ELEVEN';
+  teens[2] := 'TWELVE';
+  teens[3] := 'THIRTEEN';
+  teens[4] := 'FOURTEEN';
+  teens[5] := 'FIFTEEN';
+  teens[6] := 'SIXTEEN';
+  teens[7] := 'SEVENTEEN';
+  teens[8] := 'EIGHTEEN';
+  teens[9] := 'NINETEEN';
+
+  tens[0] := '';
+  tens[1] := ''; //TEN1
+
+  tens[2] := 'TWENTY';
+  tens[3] := 'THIRTY';
+  tens[4] := 'FORTY';
+  tens[5] := 'FIFTY';
+  tens[6] := 'SIXTY';
+  tens[7] := 'SEVENTY';
+  tens[8] := 'EIGHTY';
+  tens[9] := 'NINETY';
+
+  thousands[0] := '';
+  thousands[1] := 'THOUSAND';
+  thousands[2] := 'MILLION';
+  thousands[3] := 'BILLION';
+  thousands[4] := 'TRILLION';
+
+ try
+
+  strResult := '';
+  strTemp := IntToStr(round(dblValue));
+  //Iterate through string
+  For i := Length(strTemp) downTo 1 do
+  begin
+
+    //Get value of this digit
+    nDigit := StrToInt(MidStr(strTemp, i, 1));
+    //Get column position
+    nPosition := (Length(strTemp) - i) + 1;
+    //Action depends on 1's, 10's or 100's column
+    //Select Case (nPosition Mod 3)
+    case (nPosition Mod 3) of
+
+    1 :  //Case 1  //'1's position
+    begin
+        bAllZeros := 0;
+        if i = 1 Then
+
+          tmpBuff := ones[nDigit] + ' '
+        else
+        if MidStr(strTemp, i - 1, 1) = '1' Then
+
+        begin
+          tmpBuff := teens[nDigit] + ' ';
+        end
+        else
+        if nDigit > 0 Then
+
+          tmpBuff := ones[nDigit] + ' '
+        else
+        begin
+          //If next 10s & 100s columns are also
+          //zero, then don't show 'thousands'
+          bAllZeros := 1;
+          if i > 1 Then
+
+          begin
+            If MidStr(strTemp, i - 1, 1) <> '0' Then
+              bAllZeros := 0;
+          end;
+          If i > 2 Then
+
+          begin
+            If MidStr(strTemp, i - 2, 1) <> '0' Then
+              bAllZeros := 0;
+
+          End;
+          tmpBuff := '';
+        end;
+        If (bAllZeros = 0) and (nPosition > 1) Then
+
+          tmpBuff := tmpBuff + thousands[nPosition div 3] + ' ';
+
+        strResult := tmpBuff + strResult;
+
+    end;
+    2 :  //Tens position
+    begin
+
+        if nDigit > 0 Then
+          //if MidStr(strTemp, i - 1, 1) <> '1' Then
+          strResult := tens[nDigit] +  ' ' + strResult;
+
+    end;
+    0 :  //Hundreds position
+
+    begin
+
+        if nDigit > 0 Then
+          strResult := ones[nDigit] + ' HUNDRED ' + strResult;
+
+    end;
+    end;
+  end;
+
+  Result := strResult;
+
+ except
+
+  Result := '';
+ end;
+
+end;
+
+//=================================
+//=================================
+//=================================
+Function AmountWord;
+Const
+DigitH : Array[0..1] of String[10] = ('','Hundred ');
+DigitT : Array[0..1] of String[10] = ('','Thousand ');
+DigitM : Array[0..1] of String[10] = ('','Million ');
+AmtL   : Array[0..19] of String[10] =
+         ('','One ','Two ','Three ','Four ','Five ','Six ','Seven ',
+          'Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ',
+          'Fouteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ',
+          'Nineteen ');
+
+AmtH   : Array[0..9] of String[10] =
+         ('','',
+             'Twenty ','Thirty ','Fourty ','Fifty ',
+             'Sixty ','Seventy ','Eighty ','Ninety ');
+
+Var
+Amt                                    : String[80]                           ;
+Chk                                    : Integer                              ;
+AmtWord                                : String[80]                           ;
+Hundred                                : String[3]                            ;
+Thousand                               : String[3]                            ;
+Million                                : String[3]                            ;
+HStr,TStr,MStr                         : String[80]                           ;
+
+Function Wrd(Data : String):Word;
+Var
+W : Word;
+begin
+Val(Data,W,Chk);
+Wrd := W;
+end;
+
+Function Value(Data : Word;Exp : Boolean):Word;
+begin
+If Exp then Value := Data else Value := 0;
+end;
+
+begin
+Str(Amount:0:2,Amt);
+Amt      := JustStr(Amt,'0',12,1);
+AmtWord  := '';
+Million  := Amt[1] + Amt[2] + Amt[3];
+Thousand := Amt[4] + Amt[5] + Amt[6];
+Hundred  := Amt[7] + Amt[8] + Amt[9];
+
+MStr     := AmtL[ Wrd(Million[1]) ] +
+            DigitH[ Byte(Million[1] <> '0') ] +
+            AmtL [ Value(Wrd(Million[2]+Million[3]),Million[2] in ['0'..'1']) ] +
+            AmtH [ Value(Wrd(Million[2]),not (Million[2] in ['0'..'1'])) ] +
+            AmtL [ Value(Wrd(Million[3]),not (Million[2] in ['0'..'1'])) ] +
+            DigitM[ Byte(Million <> '000') ];
+
+TStr     := AmtL[ Wrd(Thousand[1]) ] +
+            DigitH[ Byte(Thousand[1] <> '0') ] +
+            AmtL [ Value(Wrd(Thousand[2]+Thousand[3]),Thousand[2] in ['0'..'1']) ] +
+            AmtH [ Value(Wrd(Thousand[2]),not (Thousand[2] in ['0'..'1'])) ] +
+            AmtL [ Value(Wrd(Thousand[3]),not (Thousand[2] in ['0'..'1'])) ] +
+            DigitT[ Byte(Thousand <> '000') ];
+
+HStr     := AmtL[ Wrd(Hundred[1]) ] +
+            DigitH[ Byte(Hundred[1] <> '0') ] +
+            AmtL [ Value(Wrd(Hundred[2]+Hundred[3]),Hundred[2] in ['0'..'1']) ] +
+            AmtH [ Value(Wrd(Hundred[2]),not (Hundred[2] in ['0'..'1'])) ] +
+            AmtL [ Value(Wrd(Hundred[3]),not (Hundred[2] in ['0'..'1'])) ];
+
+AmountWord := MStr + TStr + HStr + ' ' + Amt[11] + Amt[12] + '/100 Pesos';
+end;
+
+function FormRead;
+var
+i  : Integer   ;
+st : String ;
+ls : Integer   ;
+j  : Integer   ;
+
+begin { 1 }
+ls := Length(s);
+j  := ls;
+Str(a:ls,St);
+
+for i := ls downto 1 do
+begin { 2 }
+if s[i] = '#' then
+ begin { 3 }
+ s[i] := st[j];
+ j := j - 1;
+ end { 3 }
+ else
+ begin { 4 }
+ if st[j] = '.' then j := j - 1;
+ end; { 4 }
+
+if s[i] = '-' then s[i] := ' ';
+if (s[i+1] = ' ') and (s[i] = ',') then s[i] := ' ';
+if ((s[i-1] = ' ') or (St[j] = '-') or (St[j] = ' ')) and (s[i] = ',') then s[i] := ' ';
+end; { 2 }
+formRead := s;
+end; { 1 }
+
+function JustStr;
+  var
+    JustString : String[255];
+    Len        : integer;
+
+  begin {__JustStr}
+
+    if (not (JustCode in [0,1,2])) then
+       JustCode   := 0;
+    if (FieldSize > 255) then     { Make sure FieldSize is good,   }
+       FieldSize  := 255          { and initialize the field.      }
+    else if (FieldSize < 1) then
+       FieldSize  := 0;
+    FillChar(JustString[1],FieldSize,FillCh);
+    JustString[0] := AnsiChar(FieldSize);
+    Len           := Length(Source);
+
+    case JustCode of
+      0:                               {Left justification ...........  }
+         if (Len <= FieldSize) then
+            Move(Source[1],JustString[1],Len)
+         else
+            Move(Source[1],JustString[1],FieldSize);
+      1:                               { Right justification .......... }
+         if (Len <= FieldSize) then
+            Move(Source[1],JustString[FieldSize - Len + 1],Len)
+         else
+            Move(Source[Len - FieldSize + 1],JustString[1],FieldSize);
+      2:                               { Center ....................... }
+         if (Len <= FieldSize) then
+            Move(Source[1],JustString[((FieldSize - Len) div 2) + 1],Len)
+         else
+            Move(Source[((Len - FieldSize) div 2) + 1],
+                                                 JustString[1],FieldSize);
+    end; {case of JustCode}
+
+    JustStr := JustString
+
+  end;  {__JustStr}
+
+Function MonString;
+Var Mon : String[2];
+begin
+ Mon := Copy(A,1,2);
+ MonString := '';
+ If Mon = '01' then MonString := 'January '+ copy(a,3,4);
+ If Mon = '02' then MonString := 'February '+ copy(a,3,4);
+ If Mon = '03' then MonString := 'March '+ copy(a,3,4);
+ If Mon = '04' then MonString := 'April '+ copy(a,3,4);
+ If Mon = '05' then MonString := 'May '+ copy(a,3,4);
+ If Mon = '06' then MonString := 'June '+ copy(a,3,4);
+ If Mon = '07' then MonString := 'July '+ copy(a,3,4);
+ If Mon = '08' then MonString := 'August '+ copy(a,3,4);
+ If Mon = '09' then MonString := 'September '+ copy(a,3,4);
+ If Mon = '10' then MonString := 'October '+ copy(a,3,4);
+ If Mon = '11' then MonString := 'November '+ copy(a,3,4);
+ If Mon = '12' then MonString := 'December '+ copy(a,3,4);
+end;
+
+Function BillMonthVal;
+begin
+ BillMonthVal := FormatDateTime('YYYYMM',StrToDate(Copy(Data,1,2)+'/01/'+Copy(Data,3,2)));
+end;
+
+function cwLeftPad(aString:string; aCharCount:integer; aChar:String): string;
+var
+  i,vLength:integer;
+  origSize: integer;
+begin
+
+  Result := aString;
+  origSize := Length(Result);
+  if aCharCount <= origSize then
+    Exit;
+
+  while origSize <  aCharCount do
+    begin
+      Result := concat(aChar,Result);
+      origSize := origSize + 1;
+    end;
+
+end;
+function  referenceNo(code : String; dateStr : String; amntCmp : Double): String;
+var
+  str : String;
+  sumNum : Int64;
+  CheckDigitNo1,CheckDigitNo2 : Int64;
+  amountComp : Double;
+  a :Int64;
+  b,c:Int64;
+  addCheckDigit1 : String;
+begin
+    // Edit2.Text := FormatDateTime('YYYY-MM-DD', IncDay(NxDatePicker1.Date,9));
+    str := cwLeftPad(code,9,'0');
+    sumNum := StrToInt(copy(str,1,1))* 10;
+    sumNum := sumNum + StrToInt(copy(str,2,1))* 8;
+    sumNum := sumNum + StrToInt(copy(str,3,1))* 7;
+    sumNum := sumNum + StrToInt(copy(str,4,1))* 6;
+    sumNum := sumNum + StrToInt(copy(str,5,1))* 5;
+    sumNum := sumNum + StrToInt(copy(str,6,1))* 4;
+    sumNum := sumNum + StrToInt(copy(str,7,1))* 3;
+    sumNum := sumNum + StrToInt(copy(str,8,1))* 2;
+    sumNum := sumNum + StrToInt(copy(str,9,1))* 1;
+
+    CheckDigitNo1 := sumNum  mod 9;
+    if CheckDigitNo1 = 0 then CheckDigitNo1 := 9;
+
+
+    amountComp     := amntCmp * 100;
+
+    addCheckDigit1    := Concat('2',str,inttostr(CheckDigitNo1));
+
+    a := StrToInt64(addCheckDigit1);
+    b := StrToInt64(dateStr);
+    c := Trunc(amountComp);
+    sumNum :=  a + b + c;
+
+
+    addCheckDigit1    := cwLeftPad(inttostr(sumNum),11,'0');
+    //showmessage(addCheckDigit1 + #13 +
+     //           FormatDateTime('YYMMDD', NxDatePicker1.Date)+#13+
+     //          floattostr(amountComp));
+    CheckDigitNo2 := strtoint(copy(addCheckDigit1,1,1)) * 4;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,2,1)) * 3;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,3,1)) * 2;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,4,1)) * 9;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,5,1)) * 8;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,6,1)) * 7;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,7,1)) * 6;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,8,1)) * 5;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,9,1)) * 4;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,10,1)) * 3;
+    CheckDigitNo2 := CheckDigitNo2 + strtoint(copy(addCheckDigit1,11,1)) * 2;
+
+    a := CheckDigitNo2;
+    CheckDigitNo2 := CheckDigitNo2 mod 11;
+
+    if CheckDigitNo2 = 10 then CheckDigitNo2 := 0;
+
+    result := concat('2',str,
+                       inttostr(CheckDigitNo1),
+                       copy(dateStr,3,4),
+                       inttostr(CheckDigitNo2));
+
+end;
+end.

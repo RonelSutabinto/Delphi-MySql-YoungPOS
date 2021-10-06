@@ -1,0 +1,164 @@
+object backUpFrm: TbackUpFrm
+  Left = 0
+  Top = 0
+  BorderStyle = bsNone
+  Caption = 'backUpFrm'
+  ClientHeight = 291
+  ClientWidth = 524
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object AdvPanel4: TAdvPanel
+    Left = 0
+    Top = 0
+    Width = 524
+    Height = 291
+    Align = alClient
+    BevelOuter = bvNone
+    Color = 16640730
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    UseDockManager = True
+    Version = '2.3.0.0'
+    BorderColor = -1
+    BorderWidth = 1
+    Caption.Color = 14059353
+    Caption.ColorTo = 9648131
+    Caption.Font.Charset = DEFAULT_CHARSET
+    Caption.Font.Color = clWhite
+    Caption.Font.Height = -13
+    Caption.Font.Name = 'Tahoma'
+    Caption.Font.Style = []
+    Caption.GradientDirection = gdVertical
+    Caption.Indent = 4
+    Caption.ShadeLight = 255
+    CollapsColor = clNone
+    CollapsDelay = 0
+    ColorTo = 14986888
+    ShadowColor = clBlack
+    ShadowOffset = 0
+    StatusBar.BorderColor = clNone
+    StatusBar.BorderStyle = bsSingle
+    StatusBar.Font.Charset = DEFAULT_CHARSET
+    StatusBar.Font.Color = clWhite
+    StatusBar.Font.Height = -11
+    StatusBar.Font.Name = 'Tahoma'
+    StatusBar.Font.Style = []
+    StatusBar.Color = 14716773
+    StatusBar.ColorTo = 16374724
+    StatusBar.GradientDirection = gdVertical
+    Text = ''
+    ExplicitLeft = -408
+    ExplicitTop = -260
+    ExplicitWidth = 910
+    ExplicitHeight = 598
+    FullHeight = 200
+    object Label11: TLabel
+      Left = 25
+      Top = 14
+      Width = 102
+      Height = 14
+      Caption = 'JO No. / Customer'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = 7485192
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object NxHeaderPanel1: TNxHeaderPanel
+      Left = 1
+      Top = 1
+      Width = 522
+      Height = 28
+      Align = alTop
+      Caption = ''
+      HeaderColor = 11031552
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      HeaderStyle = psFlat
+      ParentHeaderFont = False
+      TabOrder = 0
+      ExplicitWidth = 908
+      FullWidth = 522
+      object Label12: TLabel
+        Left = 13
+        Top = 1
+        Width = 231
+        Height = 19
+        Caption = 'Back-up / Restore Database'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = 16770764
+        Font.Height = -16
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object AdvSmoothButton7: TAdvSmoothButton
+        Left = 483
+        Top = 1
+        Width = 28
+        Height = 22
+        Appearance.PictureAlignment = taCenter
+        Appearance.Font.Charset = DEFAULT_CHARSET
+        Appearance.Font.Color = clBlack
+        Appearance.Font.Height = -13
+        Appearance.Font.Name = 'Tahoma'
+        Appearance.Font.Style = [fsBold]
+        Appearance.Spacing = 1
+        Appearance.Rounding = 2
+        Status.Caption = '0'
+        Status.Appearance.Fill.Color = clRed
+        Status.Appearance.Fill.ColorMirror = clNone
+        Status.Appearance.Fill.ColorMirrorTo = clNone
+        Status.Appearance.Fill.GradientType = gtSolid
+        Status.Appearance.Fill.GradientMirrorType = gtSolid
+        Status.Appearance.Fill.BorderColor = clGray
+        Status.Appearance.Fill.Rounding = 0
+        Status.Appearance.Fill.ShadowOffset = 0
+        Status.Appearance.Fill.Glow = gmNone
+        Status.Appearance.Font.Charset = DEFAULT_CHARSET
+        Status.Appearance.Font.Color = clWhite
+        Status.Appearance.Font.Height = -11
+        Status.Appearance.Font.Name = 'Tahoma'
+        Status.Appearance.Font.Style = []
+        Bevel = False
+        BevelColor = clBlack
+        Color = 8404992
+        ParentFont = False
+        Picture.Data = {
+          89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+          61000000097048597300000B1300000B1301009A9C18000000206348524D0000
+          7A25000080830000F9FF000080E9000075300000EA6000003A980000176F925F
+          C546000000ED4944415478DAA493316E02410C45BDCF8A041708ABDC07890B50
+          70030A4228D2E72829A810350527A0A2400256B940C4011229291CA7D945A39D
+          1928D6D234DFFF3FCD8CE5C2DDA54B211DEB0A50D5BEAABEA9EA386756D549ED
+          E95D45771777176009787D9E1B3DE82F82FE7BA387866D6070609E093BB04901
+          9E808F96F12511AE803202DC8064C311E00E240ABB7B3C4633FB14917562082B
+          33BB446AE206AF379EB068FBEF85ABFA64216178D6329E8101502620D314601F
+          184EC020E8B521BB1460047C0307E031F137257004BE8061A317E136AA6A5F44
+          7ECDEC2FB30B2A220F66F6D36845D775FE1F00269A27319BE0F1050000000049
+          454E44AE426082}
+        DisabledColor = clSilver
+        TabOrder = 0
+        ShowFocus = False
+        Version = '2.0.1.0'
+        OnClick = AdvSmoothButton7Click
+      end
+    end
+  end
+end

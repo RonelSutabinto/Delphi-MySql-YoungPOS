@@ -1,0 +1,222 @@
+unit customerDetailsFrm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, NxCollection, AdvSmoothButton,
+  Vcl.StdCtrls, AdvEdit, Vcl.Grids, Vcl.DBGrids, CRGrid, Vcl.ExtCtrls, AdvPanel,
+  Data.DB, DBAccess, MyAccess, MemDS, NxEdit, Vcl.ComCtrls, AdvDateTimePicker;
+
+type
+  TcustomerDetails_frm = class(TForm)
+    AdvPanel6: TAdvPanel;
+    Label31: TLabel;
+    AdvEdit1: TAdvEdit;
+    AdvSmoothButton5: TAdvSmoothButton;
+    AdvSmoothButton28: TAdvSmoothButton;
+    NxHeaderPanel1: TNxHeaderPanel;
+    Label32: TLabel;
+    Label1: TLabel;
+    CRDBGrid1: TCRDBGrid;
+    NxHeaderPanel2: TNxHeaderPanel;
+    Label2: TLabel;
+    AdvPanel1: TAdvPanel;
+    AdvSmoothButton4: TAdvSmoothButton;
+    customerQ: TMyQuery;
+    customerDS: TMyDataSource;
+    customerQidjo: TIntegerField;
+    customerQJONumber: TIntegerField;
+    customerQdate: TDateTimeField;
+    customerQuserName: TStringField;
+    customerQcustomerID: TIntegerField;
+    customerQcustomer: TStringField;
+    customerQRemarks: TStringField;
+    customerQaddress: TStringField;
+    customerQcontactNo: TStringField;
+    customerQstrTmp: TStringField;
+    customerQTamount: TFloatField;
+    customerQTSales: TFloatField;
+    customerQvat: TFloatField;
+    customerQdiscount: TFloatField;
+    customerQamountPaid: TFloatField;
+    customerQBalance: TFloatField;
+    customerQTotal_Sales: TFloatField;
+    customerQContactPerson: TStringField;
+    NxLinkLabel1: TNxLinkLabel;
+    NxLinkLabel2: TNxLinkLabel;
+    CRDBGrid2: TCRDBGrid;
+    joSearchDS: TMyDataSource;
+    joSearchQ: TMyQuery;
+    joSearchQidjo: TIntegerField;
+    joSearchQJONumber: TIntegerField;
+    joSearchQdate: TDateTimeField;
+    joSearchQuserName: TStringField;
+    joSearchQcustomerID: TIntegerField;
+    joSearchQcustomer: TStringField;
+    joSearchQRemarks: TStringField;
+    joSearchQaddress: TStringField;
+    joSearchQcontactNo: TStringField;
+    joSearchQTamount: TFloatField;
+    joSearchQamountPaid: TFloatField;
+    joSearchQBalance: TFloatField;
+    joSearchQstrTmp: TStringField;
+    joSearchQvat: TFloatField;
+    joSearchQdiscount: TFloatField;
+    joSearchQTSales: TFloatField;
+    NxHeaderPanel3: TNxHeaderPanel;
+    Label3: TLabel;
+    AdvPanel2: TAdvPanel;
+    AdvSmoothButton1: TAdvSmoothButton;
+    AdvSmoothButton2: TAdvSmoothButton;
+    CRDBGrid3: TCRDBGrid;
+    joDetailDS: TMyDataSource;
+    joDetailQ: TMyQuery;
+    joDetailQidjodetails: TIntegerField;
+    joDetailQidjo: TIntegerField;
+    joDetailQdate: TDateTimeField;
+    joDetailQarticle: TStringField;
+    joDetailQamount: TFloatField;
+    joDetailQusername: TStringField;
+    joDetailQidarticle: TIntegerField;
+    joDetailQamountTotal: TFloatField;
+    joDetailQdiscount: TFloatField;
+    joDetailQvat: TFloatField;
+    joDetailQquantity: TFloatField;
+    joDetailQdscntPertcent: TFloatField;
+    joDetailQvatPercent: TFloatField;
+    joDetailQJONumber: TIntegerField;
+    NxHeaderPanel4: TNxHeaderPanel;
+    Label4: TLabel;
+    AdvPanel3: TAdvPanel;
+    AdvSmoothButton3: TAdvSmoothButton;
+    CRDBGrid4: TCRDBGrid;
+    AdvSmoothButton6: TAdvSmoothButton;
+    NxEdit1: TNxEdit;
+    NxEdit3: TNxEdit;
+    NxEdit4: TNxEdit;
+    NxEdit2: TNxEdit;
+    NxEdit5: TNxEdit;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    collectionQ: TMyQuery;
+    collectionDS: TMyDataSource;
+    collectionQornumber: TStringField;
+    collectionQTime: TStringField;
+    collectionQDate: TStringField;
+    collectionQAmount: TFloatField;
+    collectionQCheckNo: TStringField;
+    collectionQBank: TStringField;
+    AdvDateTimePicker1: TAdvDateTimePicker;
+    joDetailQtotalSale: TFloatField;
+    AdvSmoothButton7: TAdvSmoothButton;
+    procedure AdvSmoothButton5Click(Sender: TObject);
+    procedure AdvEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure CRDBGrid1CellClick(Column: TColumn);
+    procedure AdvSmoothButton2Click(Sender: TObject);
+    procedure NxLinkLabel1Click(Sender: TObject);
+    procedure NxLinkLabel2Click(Sender: TObject);
+    procedure AdvSmoothButton6Click(Sender: TObject);
+    procedure AdvSmoothButton7Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  customerDetails_frm: TcustomerDetails_frm;
+
+implementation
+
+{$R *.dfm}
+
+uses dataMod;
+
+procedure TcustomerDetails_frm.AdvEdit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  AdvSmoothButton5Click(Sender);
+
+end;
+
+procedure TcustomerDetails_frm.AdvSmoothButton2Click(Sender: TObject);
+begin
+  NxHeaderPanel3.Visible   := false;
+  CRDBGrid1.Enabled        := true;
+  NxHeaderPanel2.Enabled   := true;
+  AdvSmoothButton5.Enabled := true;
+end;
+
+procedure TcustomerDetails_frm.AdvSmoothButton5Click(Sender: TObject);
+begin
+  customerQ.Close;
+  customerQ.ParamByName('customer').Text := '%'+AdvEdit1.Text+'%';
+  customerQ.Open;
+end;
+
+procedure TcustomerDetails_frm.AdvSmoothButton6Click(Sender: TObject);
+begin
+  NxHeaderPanel4.Visible   := false;
+  CRDBGrid1.Enabled        := true;
+  NxHeaderPanel2.Enabled   := true;
+  AdvSmoothButton5.Enabled := true;
+end;
+
+procedure TcustomerDetails_frm.AdvSmoothButton7Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TcustomerDetails_frm.CRDBGrid1CellClick(Column: TColumn);
+begin
+  joSearchQ.Close;
+  joSearchQ.ParamByName('CustomerID').Text := customerQcustomerID.Text;
+  joSearchQ.Open;
+end;
+
+procedure TcustomerDetails_frm.NxLinkLabel1Click(Sender: TObject);
+begin
+  CRDBGrid1.Enabled        := false;
+  NxHeaderPanel2.Enabled   := false;
+  AdvSmoothButton5.Enabled := false;
+  AdvSmoothButton7.Enabled := false;
+
+  NxHeaderPanel3.Top  := 312;
+  NxHeaderPanel3.Left := 24;
+  NxHeaderPanel3.BringToFront;
+  NxHeaderPanel3.Visible := true;
+
+  jodetailQ.Close;
+  jodetailQ.FilterSQL := 'j.idjo = '+quotedstr(joSearchQidjo.Text);
+  jodetailQ.Open;
+end;
+
+procedure TcustomerDetails_frm.NxLinkLabel2Click(Sender: TObject);
+begin
+  CRDBGrid1.Enabled        := false;
+  NxHeaderPanel2.Enabled   := false;
+  AdvSmoothButton5.Enabled := false;
+
+  NxHeaderPanel4.Top  := 312;
+  NxHeaderPanel4.Left := 24;
+  NxHeaderPanel4.BringToFront;
+  NxHeaderPanel4.Visible := true;
+
+  collectionQ.Close;
+  collectionQ.ParamByName('joNumber').Text := joSearchQJONumber.Text;
+  collectionQ.Open;
+
+  NxEdit1.Text            :=  joSearchQJONumber.Text;
+  AdvDateTimePicker1.Date :=  joSearchQdate.AsDateTime;
+  NxEdit4.Text            := FormatFloat('###,###,##0.00',joSearchQTSales.AsFloat);
+  NxEdit3.Text            := FormatFloat('###,###,##0.00',joSearchQdiscount.AsFloat);
+  NxEdit2.Text            := FormatFloat('###,###,##0.00',joSearchQTamount.AsFloat);
+  NxEdit5.Text            := FormatFloat('###,###,##0.00',joSearchQBalance.AsFloat);
+end;
+
+end.

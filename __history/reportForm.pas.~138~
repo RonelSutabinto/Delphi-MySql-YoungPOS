@@ -1,0 +1,649 @@
+unit reportForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, NxCollection, AdvPageControl,
+  Vcl.ComCtrls, AdvOfficeButtons, Vcl.Grids, Vcl.DBGrids, CRGrid,
+  AdvDateTimePicker, AdvGlowButton, Vcl.StdCtrls, AdvEdit, Vcl.ExtCtrls,
+  AdvPanel, Data.DB, DBAccess, MyAccess, MemDS,dateUtils, frxClass, frxDBSet,
+  AdvSmoothButton, AdvSmoothLabel, Vcl.Menus, Vcl.Buttons;
+
+type
+  TReports = class(TForm)
+    joQ: TMyQuery;
+    joQidjo: TIntegerField;
+    joQJONumber: TIntegerField;
+    joQdate: TDateTimeField;
+    joQuserName: TStringField;
+    joQcustomerID: TIntegerField;
+    joQcustomer: TStringField;
+    joQRemarks: TStringField;
+    joQaddress: TStringField;
+    joQcontactNo: TStringField;
+    joQstrTmp: TStringField;
+    joQTamount: TFloatField;
+    joQTSales: TFloatField;
+    joQvat: TFloatField;
+    joQdiscount: TFloatField;
+    joQamountPaid: TFloatField;
+    joQBalance: TFloatField;
+    joDS: TMyDataSource;
+    joDueCountQ: TMyQuery;
+    joQduedate: TDateField;
+    Timer1: TTimer;
+    joDueCountQcnt: TLargeintField;
+    jo: TfrxDBDataset;
+    frxReport1: TfrxReport;
+    collectionQ: TMyQuery;
+    collectionQentry: TIntegerField;
+    collectionQdatepaid: TDateTimeField;
+    collectionQORnumber: TStringField;
+    collectionQidCustomer: TIntegerField;
+    collectionQamount: TFloatField;
+    collectionQcollectorID: TStringField;
+    collectionQCustomer: TStringField;
+    collectionQAddress: TStringField;
+    collectionQjoNumber: TIntegerField;
+    collectionQidJO: TIntegerField;
+    collectionQcheckNumber: TStringField;
+    collectionQbankCode: TStringField;
+    collectionQisCheck: TBooleanField;
+    collectionQbatch: TIntegerField;
+    collectionQdateCheck: TDateField;
+    collectionDS: TMyDataSource;
+    byCashier: TMyQuery;
+    byCashierAmunt: TFloatField;
+    byCashiercollectorID: TStringField;
+    byCashierdatepaid: TDateTimeField;
+    byCashierbatch: TIntegerField;
+    collCash: TMyQuery;
+    collCheck: TMyQuery;
+    cancelled: TMyQuery;
+    saleReport: TfrxReport;
+    collCash_R: TfrxDBDataset;
+    collCheckentry: TIntegerField;
+    collCheckdatepaid: TDateTimeField;
+    collCheckORnumber: TStringField;
+    collCheckidCustomer: TIntegerField;
+    collCheckamount: TFloatField;
+    collCheckcollectorID: TStringField;
+    collCheckCustomer: TStringField;
+    collCheckAddress: TStringField;
+    collCheckjoNumber: TIntegerField;
+    collCheckidJO: TIntegerField;
+    collCheckcheckNumber: TStringField;
+    collCheckbankCode: TStringField;
+    collCheckisCheck: TBooleanField;
+    collCheckbatch: TIntegerField;
+    collCheckdateCheck: TDateField;
+    collCheckposted: TBooleanField;
+    collCheckdatePosted: TDateField;
+    collCashentry: TIntegerField;
+    collCashdatepaid: TDateTimeField;
+    collCashORnumber: TStringField;
+    collCashidCustomer: TIntegerField;
+    collCashamount: TFloatField;
+    collCashcollectorID: TStringField;
+    collCashCustomer: TStringField;
+    collCashAddress: TStringField;
+    collCashjoNumber: TIntegerField;
+    collCashidJO: TIntegerField;
+    collCashcheckNumber: TStringField;
+    collCashbankCode: TStringField;
+    collCashisCheck: TBooleanField;
+    collCashbatch: TIntegerField;
+    collCashdateCheck: TDateField;
+    collCashposted: TBooleanField;
+    collCashdatePosted: TDateField;
+    cancelledentryCncld: TIntegerField;
+    cancelledentry: TIntegerField;
+    cancelleddatepaid: TDateTimeField;
+    cancelledORnumber: TStringField;
+    cancelledidCustomer: TIntegerField;
+    cancelledamount: TFloatField;
+    cancelledcollectorID: TStringField;
+    cancelledCustomer: TStringField;
+    cancelledAddress: TStringField;
+    cancelledjoNumber: TIntegerField;
+    cancelledidJO: TIntegerField;
+    cancelledcheckNumber: TStringField;
+    cancelledbankCode: TStringField;
+    cancelledisCheck: TBooleanField;
+    cancelledbatch: TIntegerField;
+    cancelleddateCheck: TDateField;
+    cancelledexecutedBy: TStringField;
+    cancelleddateExecuted: TDateTimeField;
+    cancelledreason: TStringField;
+    cashier_R: TfrxDBDataset;
+    collCheck_r: TfrxDBDataset;
+    cancelled_R: TfrxDBDataset;
+    byCashierName: TStringField;
+    joDetailsQ: TMyQuery;
+    joDetailsQidjodetails: TIntegerField;
+    joDetailsQidjo: TIntegerField;
+    joDetailsQdate: TDateTimeField;
+    joDetailsQarticle: TStringField;
+    joDetailsQquantity: TFloatField;
+    joDetailsQamount: TFloatField;
+    joDetailsQusername: TStringField;
+    joDetailsQidarticle: TIntegerField;
+    joDetailsQamountTotal: TFloatField;
+    joDetailsQdiscount: TFloatField;
+    joDetailsQvat: TFloatField;
+    joDetailsQdscntPertcent: TFloatField;
+    joDetailsQvatPercent: TFloatField;
+    joColl: TMyQuery;
+    joCollentry: TIntegerField;
+    joColldatepaid: TDateTimeField;
+    joCollORnumber: TStringField;
+    joCollidCustomer: TIntegerField;
+    joCollamount: TFloatField;
+    joCollcollectorID: TStringField;
+    joCollCustomer: TStringField;
+    joCollAddress: TStringField;
+    joColljoNumber: TIntegerField;
+    joCollidJO: TIntegerField;
+    joCollcheckNumber: TStringField;
+    joCollbankCode: TStringField;
+    joCollisCheck: TBooleanField;
+    joCollbatch: TIntegerField;
+    joColldateCheck: TDateField;
+    joCollposted: TBooleanField;
+    joColldatePosted: TDateField;
+    joDetailReport: TfrxReport;
+    joDetail_R: TfrxDBDataset;
+    joColl_R: TfrxDBDataset;
+    cashiersQ: TMyQuery;
+    cashiersQAmount: TFloatField;
+    cashiersQcollectorID: TStringField;
+    cashiersQbatch: TIntegerField;
+    cashiersQdatePosted: TDateField;
+    cashiersQname: TStringField;
+    CashierDS: TMyDataSource;
+    cashiersQPosted: TStringField;
+    cashiersQdatepaid: TStringField;
+    cashDetailQ: TMyQuery;
+    cashierReport: TfrxReport;
+    cashierSD_: TfrxDBDataset;
+    cashierDetailDS_: TfrxDBDataset;
+    CashierDetailReport: TfrxReport;
+    cancelledCashierQ: TMyQuery;
+    IntegerField1: TIntegerField;
+    IntegerField2: TIntegerField;
+    DateTimeField1: TDateTimeField;
+    StringField1: TStringField;
+    IntegerField3: TIntegerField;
+    FloatField1: TFloatField;
+    StringField2: TStringField;
+    StringField3: TStringField;
+    StringField4: TStringField;
+    IntegerField4: TIntegerField;
+    IntegerField5: TIntegerField;
+    StringField5: TStringField;
+    StringField6: TStringField;
+    BooleanField1: TBooleanField;
+    IntegerField6: TIntegerField;
+    DateField1: TDateField;
+    StringField7: TStringField;
+    DateTimeField2: TDateTimeField;
+    StringField8: TStringField;
+    cancelledCashier: TfrxDBDataset;
+    joCancelledQ: TMyQuery;
+    joCancelledQidjo: TIntegerField;
+    joCancelledQJONumber: TIntegerField;
+    joCancelledQdate: TDateTimeField;
+    joCancelledQduedate: TDateField;
+    joCancelledQuserName: TStringField;
+    joCancelledQcustomerID: TIntegerField;
+    joCancelledQcustomer: TStringField;
+    joCancelledQRemarks: TStringField;
+    joCancelledQaddress: TStringField;
+    joCancelledQcontactNo: TStringField;
+    joCancelledQstrTmp: TStringField;
+    joCancelledQTamount: TFloatField;
+    joCancelledQTSales: TFloatField;
+    joCancelledQvat: TFloatField;
+    joCancelledQdiscount: TFloatField;
+    joCancelledQamountPaid: TFloatField;
+    joCancelledQBalance: TFloatField;
+    joCancelledDS: TfrxDBDataset;
+    AdvPanel4: TAdvPanel;
+    AdvSmoothLabel1: TAdvSmoothLabel;
+    AdvSmoothButton1: TAdvSmoothButton;
+    postCollQ: TMyQuery;
+    PopupMenu1: TPopupMenu;
+    PostCollection1: TMenuItem;
+    dateCoverdQ: TMyQuery;
+    dateCoverdQdateFrom: TStringField;
+    dateCoverdQdateTo: TStringField;
+    dateCovered_: TfrxDBDataset;
+    dateCoverdQDate: TStringField;
+    CashierPage: TAdvPageControl;
+    AdvTabSheet1: TAdvTabSheet;
+    AdvTabSheet2: TAdvTabSheet;
+    AdvTabSheet4: TAdvTabSheet;
+    AdvTabSheet3: TAdvTabSheet;
+    AdvPanel1: TAdvPanel;
+    Shape2: TShape;
+    Label10: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Shape1: TShape;
+    countLabel: TLabel;
+    AdvEdit1: TAdvEdit;
+    AdvGlowButton1: TAdvGlowButton;
+    AdvDateTimePicker1: TAdvDateTimePicker;
+    AdvDateTimePicker2: TAdvDateTimePicker;
+    AdvOfficeCheckBox1: TAdvOfficeCheckBox;
+    AdvOfficeCheckBox2: TAdvOfficeCheckBox;
+    Panel1: TPanel;
+    NxLinkLabel1: TNxLinkLabel;
+    NxLinkLabel4: TNxLinkLabel;
+    CRDBGrid1: TCRDBGrid;
+    AdvPanel2: TAdvPanel;
+    Label5: TLabel;
+    Label6: TLabel;
+    AdvDateTimePicker3: TAdvDateTimePicker;
+    AdvDateTimePicker4: TAdvDateTimePicker;
+    NxLinkLabel3: TNxLinkLabel;
+    CRDBGrid2: TCRDBGrid;
+    Panel2: TPanel;
+    NxLinkLabel2: TNxLinkLabel;
+    AdvPanel3: TAdvPanel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    AdvDateTimePicker5: TAdvDateTimePicker;
+    AdvDateTimePicker6: TAdvDateTimePicker;
+    NxLinkLabel6: TNxLinkLabel;
+    AdvEdit2: TAdvEdit;
+    AdvGlowButton2: TAdvGlowButton;
+    Panel3: TPanel;
+    NxLinkLabel7: TNxLinkLabel;
+    NxLinkLabel8: TNxLinkLabel;
+    CRDBGrid3: TCRDBGrid;
+    AdvPanel5: TAdvPanel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    AdvDateTimePicker7: TAdvDateTimePicker;
+    AdvDateTimePicker8: TAdvDateTimePicker;
+    NxLinkLabel5: TNxLinkLabel;
+    AdvEdit3: TAdvEdit;
+    AdvGlowButton3: TAdvGlowButton;
+    NxLinkLabel9: TNxLinkLabel;
+    joQDelivered: TStringField;
+    joQdeliverydate: TDateField;
+    deliveryDetailsR: TfrxReport;
+    deliveryDetailsQ: TMyQuery;
+    deliveryR_DS: TfrxDBDataset;
+    CRDBGrid4: TCRDBGrid;
+    Panel4: TPanel;
+    NxLinkLabel10: TNxLinkLabel;
+    delQ: TMyQuery;
+    SpeedButton1: TSpeedButton;
+    delDS: TMyDataSource;
+    delRepQ: TMyQuery;
+    delRepQiddelivery: TIntegerField;
+    delRepQdeliveredBy: TStringField;
+    delRepQremarks: TStringField;
+    delRepQnoDelivery: TIntegerField;
+    delRepQdeliverydate: TDateField;
+    delRepQjono: TIntegerField;
+    delRepQidjo: TIntegerField;
+    delRepQusername: TStringField;
+    delRepQiddeliverydtls: TIntegerField;
+    delRepQarticle: TStringField;
+    delRepQquantity: TFloatField;
+    delRepQamount: TFloatField;
+    delRepQidjodetails: TIntegerField;
+    delReport: TfrxReport;
+    delReport_DS: TfrxDBDataset;
+    delRepQTAmount: TFloatField;
+    delRepQcoveredDate: TStringField;
+    procedure FormShow(Sender: TObject);
+    procedure AdvGlowButton1Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure CRDBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure AdvOfficeCheckBox1Click(Sender: TObject);
+    procedure NxLinkLabel1Click(Sender: TObject);
+    procedure NxLinkLabel3Click(Sender: TObject);
+    procedure NxLinkLabel2Click(Sender: TObject);
+    procedure NxLinkLabel4Click(Sender: TObject);
+    procedure CRDBGrid3DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure AdvGlowButton2Click(Sender: TObject);
+    procedure NxLinkLabel8Click(Sender: TObject);
+    procedure NxLinkLabel7Click(Sender: TObject);
+    procedure AdvSmoothButton1Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure PostCollection1Click(Sender: TObject);
+    procedure AdvOfficeCheckBox2Click(Sender: TObject);
+    procedure NxLinkLabel9Click(Sender: TObject);
+    procedure AdvGlowButton3Click(Sender: TObject);
+    procedure NxLinkLabel10Click(Sender: TObject);
+    procedure AdvEdit3KeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Reports: TReports;
+
+implementation
+
+{$R *.dfm}
+
+uses dataMod, mainForm;
+
+procedure TReports.AdvEdit3KeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  AdvGlowButton3Click(Sender);
+
+end;
+
+procedure TReports.AdvGlowButton1Click(Sender: TObject);
+begin
+
+  joQ.Close;
+  joQ.MacroByName('due').Active := false;
+
+  if AdvOfficeCheckBox1.Checked then
+  begin
+    joQ.MacroByName('due').Active     := true;
+    joQ.ParamByName('dateDue').AsDate := now;
+  end;
+
+  joQ.ParamByName('customer').Text  := '%'+AdvEdit1.Text+'%';
+  joQ.ParamByName('Datefrom').AsDate :=  AdvDateTimePicker1.Date;
+  joQ.ParamByName('Dateto').AsDate   := AdvDateTimePicker2.Date;
+  joQ.Open;
+
+  joCancelledQ.Close;
+  joCancelledQ.ParamByName('customer').Text  := '%'+AdvEdit1.Text+'%';
+  joCancelledQ.ParamByName('Datefrom').AsDate :=  AdvDateTimePicker1.Date;
+  joCancelledQ.ParamByName('Dateto').AsDate   := AdvDateTimePicker2.Date;
+  joCancelledQ.Open;
+
+end;
+
+procedure TReports.AdvGlowButton2Click(Sender: TObject);
+begin
+  cashiersQ.Close;
+  cashiersQ.ParamByName('dateFrom').asdate := AdvDateTimePicker5.Date;
+  cashiersQ.ParamByName('dateTo').asdate   := AdvDateTimePicker6.Date;
+  cashiersQ.ParamByName('name').Text       := '%'+AdvEdit2.Text+'%';
+  cashiersQ.Open;
+
+end;
+
+procedure TReports.AdvGlowButton3Click(Sender: TObject);
+begin
+  delQ.Close;
+  delQ.ParamByName('delno').Text := '%'+AdvEdit3.Text +'%';
+  delQ.ParamByName('datefrom').Text := FormatDateTime('YYYY-MM-DD', AdvDateTimePicker7.Date);
+  delQ.ParamByName('dateto').Text := FormatDateTime('YYYY-MM-DD', AdvDateTimePicker8.Date);
+  delQ.Open;
+end;
+
+procedure TReports.AdvOfficeCheckBox1Click(Sender: TObject);
+begin
+  AdvGlowButton1Click(Sender);
+end;
+
+procedure TReports.AdvOfficeCheckBox2Click(Sender: TObject);
+begin
+  if AdvOfficeCheckBox2.Checked then
+  begin
+    joQ.Close;
+    joQ.FilterSQL := ' Delivered = ''No'' ';
+    joQ.Filtered  := true;
+    joQ.Open;
+  end else
+  begin
+    joQ.Close;
+    joQ.Filtered := false;
+    joQ.Open;
+  end;
+end;
+
+procedure TReports.AdvSmoothButton1Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TReports.CRDBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+        //'Not Posted','Posted'   joQ  ifnull(fnl.Tamount,0) > ifnull(fnl.AmountPaid,0)
+      if (joQduedate.AsDateTime <= now) and (joQTamount.AsFloat > joQamountPaid.AsFloat)  then
+      begin
+        CRDBGrid1.Canvas.Font.Color:=clBlack;
+        CRDBGrid1.Canvas.Brush.Color:=$007A77F7;
+      end;
+      if DataCol = 4 then
+       CRDBGrid1.DefaultDrawColumnCell
+         (Rect, DataCol, Column, State);
+end;
+
+procedure TReports.CRDBGrid3DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+        //'Not Posted','Posted'   joQ  ifnull(fnl.Tamount,0) > ifnull(fnl.AmountPaid,0)
+      if ( cashiersQPosted.Text='No' )  then
+      begin
+        CRDBGrid3.Canvas.Font.Color:=clBlack;
+        CRDBGrid3.Canvas.Brush.Color:=$007A77F7;
+      end;
+      if DataCol = 5 then
+       CRDBGrid3.DefaultDrawColumnCell
+         (Rect, DataCol, Column, State);
+end;
+
+procedure TReports.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+  Reports := Nil;
+end;
+
+procedure TReports.FormShow(Sender: TObject);
+begin
+  AdvDateTimePicker1.Date := StartOfTheMonth(now);
+  AdvDateTimePicker2.Date := EndOfTheMonth(now);
+
+  AdvDateTimePicker7.Date := StartOfTheMonth(now);
+  AdvDateTimePicker8.Date := EndOfTheMonth(now);
+
+  AdvDateTimePicker3.Date := now;
+  AdvDateTimePicker4.Date := now;
+
+  AdvDateTimePicker5.Date := now;
+  AdvDateTimePicker6.Date := now;
+
+  {joQ.Close;
+  joQ.ParamByName('customer').Text   :=  '%'+AdvEdit1.Text+'%';
+  joQ.ParamByName('Datefrom').AsDate :=  AdvDateTimePicker1.Date;
+  joQ.ParamByName('Dateto').AsDate   :=  AdvDateTimePicker2.Date;
+  joQ.Open;
+
+  joDueCountQ.Close;
+  joDueCountQ.ParamByName('date').AsDate := now;
+  joDueCountQ.Open;
+
+  countLabel.Caption := joDueCountQcnt.Text;     }
+
+   if (mainFrm.userType_L.Caption<>'Admin') AND (mainFrm.userType_L.Caption<>'Supervisor') then
+   begin
+     CashierPage.Pages[0].Enabled := false;
+     CashierPage.Pages[1].Enabled := false;
+   end;
+  //AdvTabSheet1
+end;
+
+procedure TReports.NxLinkLabel10Click(Sender: TObject);
+begin
+  delRepQ.Close;
+  delRepQ.ParamByName('delno').Text := '%'+AdvEdit3.Text +'%';
+  delRepQ.ParamByName('datefrom').Text := FormatDateTime('YYYY-MM-DD', AdvDateTimePicker7.Date);
+  delRepQ.ParamByName('dateto').Text := FormatDateTime('YYYY-MM-DD', AdvDateTimePicker8.Date);
+  delRepQ.ParamByName('dateCovered').Text := 'Date Covered: '+FormatDateTime('m/d/YYYY', AdvDateTimePicker7.Date)+'-'+
+                                                FormatDateTime('m/d/YYYY', AdvDateTimePicker8.Date);
+  delRepQ.Open;
+
+  delReport.ShowReport;
+end;
+
+procedure TReports.NxLinkLabel1Click(Sender: TObject);
+begin
+  dateCoverdQ.Close;
+  dateCoverdQ.ParamByName('dateFrom').AsDate := AdvDateTimePicker1.Date;
+  dateCoverdQ.ParamByName('dateTo').AsDate   := AdvDateTimePicker2.Date;
+  dateCoverdQ.Open;
+
+  frxReport1.ShowReport;
+end;
+
+procedure TReports.NxLinkLabel2Click(Sender: TObject);
+begin
+ {collCash.Close;
+ collCash.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+ collCash.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+ collCash.Open;    }
+
+
+ collCheck.Close;
+ collCheck.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+ collCheck.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+ collCheck.Open;
+
+ cancelled.Close;
+ cancelled.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+ cancelled.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+ cancelled.Open;
+
+ byCashier.Close;
+ byCashier.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+ byCashier.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+ byCashier.Open;
+
+
+  dateCoverdQ.Close;
+  dateCoverdQ.ParamByName('dateFrom').AsDate := AdvDateTimePicker3.Date;
+  dateCoverdQ.ParamByName('dateTo').AsDate   := AdvDateTimePicker4.Date;
+  dateCoverdQ.Open;
+
+ saleReport.ShowReport;
+
+end;
+
+procedure TReports.NxLinkLabel3Click(Sender: TObject);
+begin
+  collectionQ.Close;
+  collectionQ.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+  collectionQ.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+  collectionQ.Open;
+
+
+  byCashier.Close;
+  byCashier.ParamByName('dateFrom').asdate := AdvDateTimePicker3.Date;
+  byCashier.ParamByName('dateTo').asdate   := AdvDateTimePicker4.Date;
+  byCashier.Open;
+end;
+
+procedure TReports.NxLinkLabel4Click(Sender: TObject);
+begin
+
+
+  joDetailsQ.Close;
+  joDetailsQ.ParamByName('idjo').Text := joQidjo.Text;
+  joDetailsQ.Open;
+
+
+  joColl.Close;
+  joColl.ParamByName('idjo').Text := joQidjo.Text;
+  joColl.Open;
+
+  joDetailReport.ShowReport;
+end;
+
+procedure TReports.NxLinkLabel7Click(Sender: TObject);
+begin
+  dateCoverdQ.Close;
+  dateCoverdQ.ParamByName('dateFrom').AsDate := AdvDateTimePicker5.Date;
+  dateCoverdQ.ParamByName('dateTo').AsDate   := AdvDateTimePicker6.Date;
+  dateCoverdQ.Open;
+
+  cashierReport.ShowReport;
+end;
+
+procedure TReports.NxLinkLabel8Click(Sender: TObject);
+begin
+  if cashiersQPosted.Text ='No' then
+  begin
+    messagedlg('Collection batch not yet posted..',mtError,[mbOK],0);
+    exit;
+  end;
+
+  cashDetailQ.Close;
+  cashDetailQ.ParamByName('date').Text  := FormatDateTime('YYYY-MM-DD', cashiersQdatepaid.AsDateTime);
+  cashDetailQ.ParamByName('ID').Text    := cashiersQcollectorID.Text;
+  cashDetailQ.ParamByName('batch').Text := cashiersQbatch.Text;
+  cashDetailQ.Open;
+
+
+  cancelledCashierQ.Close;
+  cancelledCashierQ.ParamByName('date').Text  := FormatDateTime('YYYY-MM-DD', cashiersQdatepaid.AsDateTime);
+  cancelledCashierQ.ParamByName('ID').Text    := cashiersQcollectorID.Text;
+  cancelledCashierQ.ParamByName('batch').Text := cashiersQbatch.Text;
+  cancelledCashierQ.Open;
+
+  CashierDetailReport.ShowReport;
+end;
+
+procedure TReports.NxLinkLabel9Click(Sender: TObject);
+begin
+  deliveryDetailsQ.close;
+  deliveryDetailsQ.ParamByName('dateFrom').Text := FormatDateTime('YYYY-MM-DD',AdvDateTimePicker1.Date);
+  deliveryDetailsQ.ParamByName('dateTo').Text   := FormatDateTime('YYYY-MM-DD',AdvDateTimePicker2.Date);
+  deliveryDetailsQ.ParamByName('customer').Text := '%'+AdvEdit1.Text+'%';
+  deliveryDetailsQ.Open;
+  deliveryDetailsR.ShowReport;
+end;
+
+procedure TReports.PostCollection1Click(Sender: TObject);
+begin
+  if (mainFrm.userType_L.Caption='Admin') OR (mainFrm.userType_L.Caption='Supervisor') then
+  begin
+    postCollQ.ParamByName('date').AsDate   := now;
+    postCollQ.ParamByName('batch').Text    := cashiersQbatch.Text;
+    postCollQ.ParamByName('ID').Text       := cashiersQcollectorID.Text;
+    postCollQ.ParamByName('dateColl').Text := FormatDateTime('YYYY-MM-DD',cashiersQdatepaid.AsDateTime);
+    postCollQ.Execute;
+
+    messageDlg('Batch '+cashiersQbatch.Text+' collection of '+cashiersQcollectorID.Text+' successfully posted..',mtInformation,[mbOK],0);
+    cashiersQ.Refresh;
+  end
+  else
+  begin
+    messagedlg('This function is restricted by the admin..',mtError,[mbOK],0);
+  end;
+end;
+
+procedure TReports.Timer1Timer(Sender: TObject);
+begin
+  joDueCountQ.Close;
+  joDueCountQ.ParamByName('date').AsDate := now;
+  joDueCountQ.Open;
+
+  countLabel.Caption := joDueCountQcnt.Text;
+end;
+
+end.

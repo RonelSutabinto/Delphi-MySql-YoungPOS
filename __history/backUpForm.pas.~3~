@@ -1,0 +1,30 @@
+unit backUpForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvSmoothButton, NxCollection,
+  Vcl.StdCtrls, Vcl.ExtCtrls, AdvPanel;
+
+type
+  TbackUpFrm = class(TForm)
+    AdvPanel4: TAdvPanel;
+    Label11: TLabel;
+    NxHeaderPanel1: TNxHeaderPanel;
+    Label12: TLabel;
+    AdvSmoothButton7: TAdvSmoothButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  backUpFrm: TbackUpFrm;
+
+implementation
+
+{$R *.dfm}
+
+end.

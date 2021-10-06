@@ -1,0 +1,1064 @@
+unit posForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvSmoothLabel, NxCollection,
+  Vcl.StdCtrls, Vcl.DBCtrls, AdvEdit, advlued, DBAdvLe, Vcl.ExtCtrls, AdvPanel,
+  AeroButtons, AdvSmoothButton, W7Classes, W7Buttons, DsFancyButton, PDJButton,
+  W7NaviButtons, advmultibuttonedit, AdvShapeButton, IWVCLBaseControl,
+  IWBaseControl, IWBaseHTMLControl, IWControl, IWCompButton, AdvMetroButton,
+  VCLTee.TeCanvas, VCLTee.TeeEdiGrad, Vcl.ImgList, NxColumns, NxDBColumns,
+  NxScrollControl, NxCustomGridControl, NxCustomGrid, NxDBGrid, AdvNavBar,
+  AdvGlassButton, Vcl.ComCtrls, GDIPPictureContainer, VCLTee.TeeFilters,
+  Vcl.Imaging.pngimage, W7Images, AdvSelectors, AdvToolBtn, AdvGroupBox,
+  AdvOfficeButtons, Data.DB, MemDS, DBAccess, MyAccess, Vcl.Mask, AdvSmoothEdit,
+  AdvSmoothEditButton, AdvSmoothDatePicker, AdvDateTimePicker, Vcl.Grids,
+  AdvObj, BaseGrid, AdvGrid, DBAdvGrid, NxFocus, Vcl.DBGrids, CRGrid,ShellApi,
+  Vcl.Menus, frxClass, frxDBSet, AdvCombo,dateUtils, NxEdit;
+
+type
+  TposFrm = class(TForm)
+    AdvPanel4: TAdvPanel;
+    AdvSmoothLabel1: TAdvSmoothLabel;
+    AdvPanelStyler1: TAdvPanelStyler;
+    AdvPanel3: TAdvPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    GDIPPictureContainer1: TGDIPPictureContainer;
+    AdvPanel1: TAdvPanel;
+    AdvPanel2: TAdvPanel;
+    AdvGroupBox1: TAdvGroupBox;
+    Label4: TLabel;
+    Label5: TLabel;
+    joNumber_tf: TAdvLUEdit;
+    name_tf: TAdvLUEdit;
+    address_tf: TAdvLUEdit;
+    tamount_tf: TAdvLUEdit;
+    AdvGroupBox2: TAdvGroupBox;
+    Label7: TLabel;
+    Label6: TLabel;
+    cashier_tf: TAdvLUEdit;
+    balance_tf: TAdvLUEdit;
+    Label16: TLabel;
+    orNumber_tf: TAdvLUEdit;
+    Label17: TLabel;
+    exitSales_btn: TAdvSmoothButton;
+    cancelR_btn: TAdvSmoothButton;
+    tenders_btn: TAdvSmoothButton;
+    customer_btn: TAdvSmoothButton;
+    close_btn: TAdvSmoothButton;
+    tsale_tf: TAdvLUEdit;
+    Label8: TLabel;
+    Label11: TLabel;
+    discount_tf: TAdvLUEdit;
+    Label18: TLabel;
+    vat_tf: TAdvLUEdit;
+    Label19: TLabel;
+    Allpayment_lb: TAdvLUEdit;
+    amountPaid_lb: TLabel;
+    Label15: TLabel;
+    printR_btn: TAdvSmoothButton;
+    Label9: TLabel;
+    PaymentPanel: TNxHeaderPanel;
+    Bevel1: TBevel;
+    Label10: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    PD_Radio: TGroupBox;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    CheckDate: TDateTimePicker;
+    CheckNumber: TEdit;
+    Bank: TComboBox;
+    StaticText13: TStaticText;
+    orNumber_s: TStaticText;
+    cash: TEdit;
+    StaticText14: TStaticText;
+    MOP_Radio: TAdvOfficeRadioGroup;
+    Image1: TImage;
+    joQ: TMyQuery;
+    joQidjo: TIntegerField;
+    joQJONumber: TIntegerField;
+    joQdate: TDateTimeField;
+    joQuserName: TStringField;
+    joQcustomerID: TIntegerField;
+    joQcustomer: TStringField;
+    joQRemarks: TStringField;
+    joQaddress: TStringField;
+    joQcontactNo: TStringField;
+    joQstrTmp: TStringField;
+    joQtamount: TFloatField;
+    joQAmountPaid: TFloatField;
+    joQBalance: TFloatField;
+    cashierID_tf: TAdvLUEdit;
+    date_dp: TAdvDateTimePicker;
+    AdvSmoothButton1: TAdvSmoothButton;
+    batch_tf: TAdvLUEdit;
+    Label20: TLabel;
+    NxHeaderPanel1: TNxHeaderPanel;
+    AdvPanel5: TAdvPanel;
+    Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
+    Label27: TLabel;
+    Label28: TLabel;
+    AdvLUEdit2: TAdvLUEdit;
+    AdvLUEdit3: TAdvLUEdit;
+    AdvLUEdit4: TAdvLUEdit;
+    AdvLUEdit5: TAdvLUEdit;
+    AdvDateTimePicker1: TAdvDateTimePicker;
+    AdvSmoothButton18: TAdvSmoothButton;
+    AdvSmoothButton2: TAdvSmoothButton;
+    collectionQ: TMyQuery;
+    DBAdvGrid1: TDBAdvGrid;
+    collectionDS: TMyDataSource;
+    collectionQentry: TIntegerField;
+    collectionQdatepaid: TDateTimeField;
+    collectionQORnumber: TStringField;
+    collectionQidCustomer: TIntegerField;
+    collectionQamount: TFloatField;
+    collectionQcollectorID: TStringField;
+    collectionQCustomer: TStringField;
+    collectionQAddress: TStringField;
+    collectionQjoNumber: TIntegerField;
+    collectionQidJO: TIntegerField;
+    collectionQcheckNumber: TStringField;
+    collectionQbankCode: TStringField;
+    collectionQisCheck: TBooleanField;
+    collectionQbatch: TIntegerField;
+    AdvGroupBox3: TAdvGroupBox;
+    Label30: TLabel;
+    Label29: TLabel;
+    Label14: TLabel;
+    bank_tf: TAdvLUEdit;
+    checkNumber_tf: TAdvLUEdit;
+    checkdate_dp: TAdvDateTimePicker;
+    NxFocus1: TNxFocus;
+    NxHeaderPanel2: TNxHeaderPanel;
+    AdvPanel6: TAdvPanel;
+    CRDBGrid1: TCRDBGrid;
+    AdvEdit1: TAdvEdit;
+    AdvSmoothButton5: TAdvSmoothButton;
+    Label31: TLabel;
+    joSearchDS: TMyDataSource;
+    joSearchQ: TMyQuery;
+    AdvSmoothButton28: TAdvSmoothButton;
+    AdvSmoothButton27: TAdvSmoothButton;
+    sample_btn: TButton;
+    tamountPaidQ: TMyQuery;
+    tamountPaidQAmountPaid: TFloatField;
+    insertCollectionQ: TMyQuery;
+    usersQ: TMyQuery;
+    updateUsersQ: TMyQuery;
+    usersQid: TIntegerField;
+    usersQuserID: TStringField;
+    usersQpassword: TStringField;
+    usersQname: TStringField;
+    usersQposition: TStringField;
+    usersQrestriction: TStringField;
+    usersQpicture: TBlobField;
+    usersQdate: TDateField;
+    usersQisactive: TBooleanField;
+    usersQcontact: TStringField;
+    usersQORNumber: TIntegerField;
+    joSearchQidjo: TIntegerField;
+    joSearchQJONumber: TIntegerField;
+    joSearchQdate: TDateTimeField;
+    joSearchQuserName: TStringField;
+    joSearchQcustomerID: TIntegerField;
+    joSearchQcustomer: TStringField;
+    joSearchQRemarks: TStringField;
+    joSearchQaddress: TStringField;
+    joSearchQcontactNo: TStringField;
+    joSearchQTamount: TFloatField;
+    joSearchQamountPaid: TFloatField;
+    joSearchQBalance: TFloatField;
+    joSearchQstrTmp: TStringField;
+    joSearchQvat: TFloatField;
+    joSearchQdiscount: TFloatField;
+    AdvSmoothButton29: TAdvSmoothButton;
+    insertCanceldQ: TMyQuery;
+    collectionQdateCheck: TDateField;
+    updateColcanceledQ: TMyQuery;
+    NxHeaderPanel3: TNxHeaderPanel;
+    Label32: TLabel;
+    Label33: TLabel;
+    ID_cancel_tf: TAdvLUEdit;
+    or_cancel_tf: TAdvLUEdit;
+    amount_cancel_tf: TAdvLUEdit;
+    Label34: TLabel;
+    Label35: TLabel;
+    Label36: TLabel;
+    Label37: TLabel;
+    reason_tf: TAdvLUEdit;
+    Label38: TLabel;
+    AdvSmoothButton4: TAdvSmoothButton;
+    AdvSmoothButton6: TAdvSmoothButton;
+    AdvGroupBox4: TAdvGroupBox;
+    Label39: TLabel;
+    tmpQ: TMyQuery;
+    PopupMenu1: TPopupMenu;
+    Refresh1: TMenuItem;
+    orReceiptReport: TfrxReport;
+    orReceiptQ: TMyQuery;
+    orReceiptQName: TStringField;
+    orReceiptQAddress: TStringField;
+    orReceiptQAmountW: TStringField;
+    orReceiptQAmount: TStringField;
+    orReceiptQCashier: TStringField;
+    orReceiptQisCheck: TStringField;
+    orReceiptQisCash: TStringField;
+    orReceiptQtSales: TStringField;
+    orReceiptQTotalDue: TStringField;
+    orReceiptQjoNo: TStringField;
+    orReceiptQDate: TStringField;
+    orReceiptQpwdID: TStringField;
+    orReceiptQDiscount: TStringField;
+    orReceiptQTPayment: TStringField;
+    joSearchQTSales: TFloatField;
+    collectionPostedQ: TMyQuery;
+    collectionPostedQcollectorID: TStringField;
+    collectionPostedQtotal: TFloatField;
+    collectionPostedQpost: TStringField;
+    collectionPostedQbatch: TIntegerField;
+    collPostedDS: TMyDataSource;
+    collectionPostedQName: TStringField;
+    collectionPostedQdatepaid: TStringField;
+    NxHeaderPanel4: TNxHeaderPanel;
+    Label40: TLabel;
+    AdvPanel7: TAdvPanel;
+    Label41: TLabel;
+    Label42: TLabel;
+    CRDBGrid2: TCRDBGrid;
+    AdvSmoothButton7: TAdvSmoothButton;
+    AdvDateTimePicker2: TAdvDateTimePicker;
+    AdvComboBox1: TAdvComboBox;
+    AdvDateTimePicker3: TAdvDateTimePicker;
+    AdvSmoothButton33: TAdvSmoothButton;
+    postCollQ: TMyQuery;
+    checkPendingQ: TMyQuery;
+    timeLabel: TLabel;
+    Timer1: TTimer;
+    pass_cancel_tf: TNxEdit;
+    orReceipt_: TfrxDBDataset;
+    joSearchQspNo: TStringField;
+    collectionQorNo: TStringField;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure W7ToolButton1Click(Sender: TObject);
+    procedure AdvGlassButton4Click(Sender: TObject);
+    procedure MOP_RadioClick(Sender: TObject);
+    procedure close_btnClick(Sender: TObject);
+    procedure AdvSmoothButton1Click(Sender: TObject);
+    procedure AdvSmoothButton2Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure exitPayment();
+    procedure exitSales_btnClick(Sender: TObject);
+    procedure printR_btnClick(Sender: TObject);
+    procedure tenders_btnClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure AdvSmoothButton18Click(Sender: TObject);
+    procedure AdvSmoothButton5Click(Sender: TObject);
+    procedure AdvSmoothButton27Click(Sender: TObject);
+    procedure AdvEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure AdvSmoothButton28Click(Sender: TObject);
+    procedure sample_btnClick(Sender: TObject);
+    procedure cashKeyPress(Sender: TObject; var Key: Char);
+    procedure BankKeyPress(Sender: TObject; var Key: Char);
+    procedure CheckNumberKeyPress(Sender: TObject; var Key: Char);
+    procedure CRDBGrid1KeyPress(Sender: TObject; var Key: Char);
+    procedure AdvSmoothButton29Click(Sender: TObject);
+    procedure cancelR_btnClick(Sender: TObject);
+    procedure AdvSmoothButton4Click(Sender: TObject);
+    procedure AdvSmoothButton6Click(Sender: TObject);
+    procedure ID_cancel_tfKeyPress(Sender: TObject; var Key: Char);
+    procedure pass_cancel_tfKeyPress(Sender: TObject; var Key: Char);
+    procedure reason_tfKeyPress(Sender: TObject; var Key: Char);
+    procedure Refresh1Click(Sender: TObject);
+    procedure customer_btnClick(Sender: TObject);
+    procedure AdvSmoothButton7Click(Sender: TObject);
+    procedure CRDBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure AdvDateTimePicker2Click(Sender: TObject);
+    procedure AdvComboBox1CloseUp(Sender: TObject);
+    procedure AdvSmoothButton33Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  posFrm: TposFrm;
+  AmountPaid  : Currency;
+  isCheck     : Boolean;
+  bankCode    : String;
+  checkNo     : String;
+  check_Date  : String;
+  pressK      : Boolean;
+  isTender    : Boolean;
+  idjo        : String;
+  idCustomer  : String;
+  entryCol    : String;
+  pwdNo       : String;
+
+implementation
+
+{$R *.dfm}
+
+uses mainForm, searchJOForm, dataMod, MODTOOLS, customerForm,
+  customerDetailsFrm;
+
+procedure TposFrm.AdvComboBox1CloseUp(Sender: TObject);
+begin
+   collectionPostedQ.Close;
+   collectionPostedQ.MacroByName('posted').Active   := false;
+   collectionPostedQ.MacroByName('unposted').Active := false;
+
+   if AdvComboBox1.Text = 'Unposted' then
+   begin
+     collectionPostedQ.MacroByName('unposted').Active := true;
+     //showmessage('OK R');
+   end
+   else if AdvComboBox1.Text = 'Posted' then
+   begin
+     collectionPostedQ.MacroByName('posted').Active   := true;
+     //showmessage('OK posted');
+   end;
+   collectionPostedQ.ParamByName('dateFrom').AsDate := AdvDateTimePicker2.Date;
+   collectionPostedQ.ParamByName('dateTo').AsDate   := AdvDateTimePicker3.Date;
+   collectionPostedQ.Open;
+
+   NxHeaderPanel4.Top  := 97;
+   NxHeaderPanel4.Left := 118;
+   NxHeaderPanel4.BringToFront;
+   NxHeaderPanel4.Visible  := true;
+   AdvPanel3.Enabled  := false;
+end;
+
+procedure TposFrm.AdvDateTimePicker2Click(Sender: TObject);
+begin
+  AdvComboBox1CloseUp(Sender);
+end;
+
+procedure TposFrm.AdvEdit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  AdvSmoothButton5Click(Sender);
+end;
+
+procedure TposFrm.AdvGlassButton4Click(Sender: TObject);
+begin
+  close;
+end;
+procedure TposFrm.exitPayment;
+begin
+  joNumber_tf.Text     := '';
+  name_tf.Text         := '';
+  address_tf.Text      := '';
+  tamount_tf.Text      := '';
+  balance_tf.Text      := '';
+
+  tsale_tf.Text         := '0.00';
+  discount_tf.Text      := '0.00';
+  vat_tf.Text           := '0.00';
+  amountPaid_lb.Caption := '0.00';
+  Allpayment_lb.Text    := '0.00';
+
+  bank_tf.Text        := '';
+  ischeck             := false;
+  idjo                := '';
+  idCustomer          := '';
+  isTender            := false;
+  checkNumber_tf.Text := '';
+  pwdNo               := '';
+  checkdate_dp.Date   := now;
+
+  exitSales_btn.Enabled := false;
+  cancelR_btn.Enabled   := true;
+  printR_btn.Enabled    := false;
+  tenders_btn.Enabled   := false;
+  close_btn.Enabled     := true;
+
+  PaymentPanel.Visible  := false;
+  AdvPanel3.Enabled     := true;
+  entryCol              := '';
+
+  //=======Tender details=============
+  //==================================
+  cash.Text            := '';
+  StaticText13.Caption := '';
+  MOP_Radio.ItemIndex  := 0;
+  Bank.ItemIndex       := -1;
+  CheckNumber.Text     := '';
+  //==================================
+  //==================================
+
+
+
+  AdvSmoothButton1.SetFocus;
+
+end;
+procedure TposFrm.exitSales_btnClick(Sender: TObject);
+begin
+   exitPayment;
+end;
+
+procedure TposFrm.AdvSmoothButton18Click(Sender: TObject);
+begin
+  checkPendingQ.Close;
+  checkPendingQ.ParamByName('date').Text := FormatDateTime('YYYY-MM-DD',now);
+  checkPendingQ.ParamByName('ID').Text   := AdvLUEdit2.Text;
+  checkPendingQ.Open;
+
+  if not checkPendingQ.IsEmpty then
+  begin
+    messageDlg('Please post your previous collections..',mtError,[mbOK],0);
+    exit;
+  end;
+
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('Select * from collection where collectorID = :ID and batch = :batch and date_format(datepaid,''%Y-%m-%d'') = :date and posted = 1');
+  tmpQ.ParamByName('ID').Text     := AdvLUEdit2.Text;
+  tmpQ.ParamByName('batch').Text  := AdvLUEdit3.Text;
+  tmpQ.ParamByName('date').AsDate := AdvDateTimePicker1.Date;
+  tmpQ.Open;
+
+  if not tmpQ.IsEmpty then
+  begin
+    messageDlg('Batch Collection was already posted..',mtError,[mbOK],0);
+    exit;
+  end;
+
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('Select * from collection where orNo = :orno');
+  tmpQ.ParamByName('orno').Text := AdvLUEdit5.Text;
+  tmpQ.Open;
+
+  if not tmpQ.IsEmpty then
+  begin
+    messageDlg('OR number already exist..',mtError,[mbOK],0);
+    exit;
+  end;
+
+  DBAdvGrid1.FloatingFooter.ColumnCalc[5] := acSum;
+  DBAdvGrid1.FloatingFooter.ColumnCalc[1] := acCOUNT;
+  DBAdvGrid1.FloatingFooter.Visible := True;
+
+  batch_tf.Text := AdvLUEdit3.Text;
+  cashierID_tf.Text := AdvLUEdit2.Text;
+  cashier_tf.Text   := AdvLUEdit4.Text;
+  date_dp.Date      := AdvDateTimePicker1.Date;
+  orNumber_tf.Text  := AdvLUEdit5.Text;
+
+  collectionQ.Close;
+  collectionQ.ParamByName('ID').Text         := cashierID_tf.Text;
+  collectionQ.ParamByName('batch').Text      :=  batch_tf.Text;
+  collectionQ.ParamByName('datepaid').Text   := FormatDateTime('YYYY-MM-DD', date_dp.Date);
+  collectionQ.Open;
+
+  exitPayment;
+
+  AdvPanel3.Enabled      := true;
+  NxHeaderPanel1.Visible := false;
+
+  AdvSmoothButton1.SetFocus;
+
+end;
+
+procedure TposFrm.AdvSmoothButton1Click(Sender: TObject);
+begin
+
+  AdvPanel3.Enabled   := false;
+  NxHeaderPanel2.top  := 109;
+  NxHeaderPanel2.Left := 131;
+  NxHeaderPanel2.BringToFront;
+  NxHeaderPanel2.Visible := true;
+
+  joSearchQ.Close;
+  AdvEdit1.SetFocus;
+end;
+
+procedure TposFrm.AdvSmoothButton27Click(Sender: TObject);
+begin
+     idjo             := joSearchQidjo.Text;
+     idCustomer       := joSearchQcustomerID.Text;
+     joNumber_tf.Text := joSearchQJONumber.Text;
+     name_tf.Text     := joSearchQcustomer.Text;
+     address_tf.Text  := joSearchQaddress.Text;
+     pwdNo            := joSearchQspNo.Text;
+     tamount_tf.Text  := FormatFloat('###,###,##0.00',joSearchQtamount.AsFloat);
+     balance_tf.Text  := FormatFloat('###,###,##0.00',joSearchQBalance.AsFloat);
+     vat_tf.Text      := formatFloat('###,###,##0.00',joSearchQvat.AsFloat);
+     discount_tf.Text := formatFloat('###,###,##0.00',joSearchQDiscount.AsFloat);
+     tsale_tf.Text    := FormatFloat('###,###,##0.00',joSearchQTSales.AsFloat);
+
+     exitSales_btn.Enabled := true;
+     cancelR_btn.Enabled   := false;
+     printR_btn.Enabled    := false;
+     tenders_btn.Enabled   := true;
+     close_btn.Enabled     := false;
+
+     NxHeaderPanel2.Visible := false;
+     AdvPanel3.Enabled      := true;
+     //sample_btnClick(Sender);
+end;
+
+procedure TposFrm.AdvSmoothButton28Click(Sender: TObject);
+begin
+   NxHeaderPanel2.Visible := false;
+   AdvPanel3.Enabled      := true;
+end;
+
+procedure TposFrm.AdvSmoothButton29Click(Sender: TObject);
+var
+    SEInfo: TShellExecuteInfo;
+    ExitCode: DWORD;
+    ExecuteFile, ParamString, StartInString: string;
+begin
+    ExecuteFile:='c:\Windows\system32\calc.exe';  //'c:\Windows\Calc.exe';  //
+
+    FillChar(SEInfo, SizeOf(SEInfo), 0) ;
+    SEInfo.cbSize := SizeOf(TShellExecuteInfo) ;
+    with SEInfo do begin
+      fMask := SEE_MASK_NOCLOSEPROCESS;
+      Wnd := Application.Handle;
+      lpFile := PChar(ExecuteFile) ;
+ {
+ ParamString can contain the
+ application parameters.
+ }
+ // lpParameters := PChar(ParamString) ;
+ {
+ StartInString specifies the
+ name of the working directory.
+ If ommited, the current directory is used.
+ }
+ // lpDirectory := PChar(StartInString) ;
+      nShow := SW_SHOWNORMAL;
+    end;
+    if ShellExecuteEx(@SEInfo) then begin
+      repeat
+        Application.ProcessMessages;
+        GetExitCodeProcess(SEInfo.hProcess, ExitCode) ;
+      until (ExitCode <> STILL_ACTIVE) or
+ 	 Application.Terminated;
+      ShowMessage('Calculator terminated') ;
+    end
+    else ShowMessage('Error starting Calc!') ;
+end;
+
+procedure TposFrm.AdvSmoothButton2Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TposFrm.AdvSmoothButton33Click(Sender: TObject);
+begin
+  if collectionPostedQpost.Text = 'Posted' then
+  begin
+    messageDlg('Collection was already posted..',mtError,[mbOK],0);
+    exit;
+  end;
+
+  postCollQ.ParamByName('date').AsDate   := now;
+  postCollQ.ParamByName('batch').Text    := collectionPostedQbatch.Text;
+  postCollQ.ParamByName('ID').Text       := collectionPostedQcollectorID.Text;
+  postCollQ.ParamByName('dateColl').Text := FormatDateTime('YYYY-MM-DD',collectionPostedQdatepaid.AsDateTime);
+  postCollQ.Execute;
+
+  messageDlg('Batch '+collectionPostedQbatch.Text+' collection of '+collectionPostedQcollectorID.Text+' successfully posted..',mtInformation,[mbOK],0);
+  collectionPostedQ.Refresh;
+ // collectionPostedQ.Open;
+end;
+
+procedure TposFrm.AdvSmoothButton4Click(Sender: TObject);
+begin
+  entryCol              := '';
+  ID_cancel_tf.Text     := '';
+  pass_cancel_tf.Text   := '';
+  reason_tf.Text        := '';
+  or_cancel_tf.Text     := '';
+  amount_cancel_tf.Text :='';
+
+  NxHeaderPanel3.Visible := false;
+end;
+
+procedure TposFrm.AdvSmoothButton5Click(Sender: TObject);
+begin
+  joSearchQ.Close;
+  joSearchQ.ParamByName('JONumber').Text := '%'+AdvEdit1.Text+'%';
+  joSearchQ.ParamByName('Customer').Text := '%'+AdvEdit1.Text+'%';
+  joSearchQ.Open;
+end;
+
+procedure TposFrm.AdvSmoothButton6Click(Sender: TObject);
+begin
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('Select * from users where userID = :ID and password = md5(:pass) ');
+  tmpQ.ParamByName('ID').Text   := ID_cancel_tf.Text;
+  tmpQ.ParamByName('pass').Text := pass_cancel_tf.Text;
+  tmpQ.Open;
+
+  if tmpQ.IsEmpty then
+  begin
+    messagedlg('Invalid userID/password..',mtError,[mbOK],0);
+    ID_cancel_tf.SetFocus;
+    exit;
+  end;
+
+  if (tmpQ.FieldByName('restriction').Text <> 'Supervisor') AND (tmpQ.FieldByName('restriction').Text <> 'Admin') then
+  begin
+    messagedlg('Only supervisor/Admin is allowed to execute this process..',mtError,[mbOK],0);
+    ID_cancel_tf.SetFocus;
+    Exit;
+  end;
+
+  if Length(reason_tf.Text)<3 then
+  begin
+    messagedlg('Please enter the cancelation cause..',mtError,[mbOK],0);
+    reason_tf.SetFocus;
+    Exit;
+  end;
+
+
+  insertCanceldQ.ParamByName('entry').Text          := entryCol;
+  insertCanceldQ.ParamByName('datepaid').AsDateTime := collectionQdatepaid.AsDateTime;
+  insertCanceldQ.ParamByName('ORnumber').Text       := collectionQORnumber.Text;
+  insertCanceldQ.ParamByName('orNo').Text           := collectionQorNo.Text;
+  insertCanceldQ.ParamByName('idCustomer').Text     := collectionQidCustomer.Text;
+  insertCanceldQ.ParamByName('amount').AsFloat      := collectionQamount.AsFloat;
+  insertCanceldQ.ParamByName('collectorID').Text    := collectionQcollectorID.Text;
+  insertCanceldQ.ParamByName('Customer').Text       := collectionQCustomer.Text;
+  insertCanceldQ.ParamByName('Address').Text        := collectionQAddress.Text;
+  insertCanceldQ.ParamByName('joNumber').Text       := collectionQjoNumber.Text;
+  insertCanceldQ.ParamByName('idJO').Text           := collectionQidJO.Text;
+  insertCanceldQ.ParamByName('checkNumber').Value   := collectionQcheckNumber.Value;
+  insertCanceldQ.ParamByName('bankCode').Value      := collectionQbankCode.Value;
+  insertCanceldQ.ParamByName('isCheck').AsBoolean   := collectionQisCheck.AsBoolean;
+  insertCanceldQ.ParamByName('batch').Text          := collectionQbatch.Text;
+  insertCanceldQ.ParamByName('dateCheck').Value     := collectionQdateCheck.Value;
+  insertCanceldQ.ParamByName('executedBy').Text     := tmpQ.FieldByName('name').Text;
+  insertCanceldQ.ParamByName('dateExecuted').AsDateTime := now;
+  insertCanceldQ.ParamByName('reason').Text         :='';
+  insertCanceldQ.Execute;
+
+  updateColcanceledQ.ParamByName('entry').Text      := entryCol;
+  updateColcanceledQ.Execute;
+
+  messagedlg('Cancelation process complete..',mtInformation,[mbOK],0);
+
+  collectionQ.Refresh;
+  DBAdvGrid1.Refresh;
+
+  entryCol              := '';
+  ID_cancel_tf.Text     := '';
+  pass_cancel_tf.Text   := '';
+  reason_tf.Text        := '';
+  or_cancel_tf.Text     := '';
+  amount_cancel_tf.Text :='';
+  NxHeaderPanel3.Visible := false;
+end;
+
+procedure TposFrm.AdvSmoothButton7Click(Sender: TObject);
+begin
+  AdvPanel3.Enabled       := true;
+  NxHeaderPanel4.Visible  := false;
+end;
+
+procedure TposFrm.BankKeyPress(Sender: TObject; var Key: Char);
+begin
+  If Key = #13 then
+   begin
+     Perform(CM_DIALOGKEY,VK_TAB,0);
+     Key := #0;
+   end;
+end;
+
+procedure TposFrm.cancelR_btnClick(Sender: TObject);
+begin
+  NxHeaderPanel3.Top  := 93;
+  NxHeaderPanel3.Left := 309;
+  NxHeaderPanel3.BringToFront;
+  NxHeaderPanel3.Visible := true;
+
+  ID_cancel_tf.SetFocus;
+
+  entryCol := collectionQentry.Text;
+  or_cancel_tf.Text := collectionQORnumber.Text;
+  amount_cancel_tf.Text := formatFloat('###,###,##0.00',collectionQamount.AsFloat);
+end;
+
+procedure TposFrm.cashKeyPress(Sender: TObject; var Key: Char);
+var
+ amntTndr : Double;
+ bal      : Double;
+ orNo     : Integer;
+begin
+  If Key = #13 then
+   begin
+     Key := #0;
+
+     amntTndr  := strtofloat(stringreplace(cash.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+     bal       := strtofloat(stringreplace(balance_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+
+     StaticText13.Caption := formatFloat('###,###,##0.00',bal-amntTndr);
+     orNumber_s.Caption   := orNumber_tf.Text;
+
+     if ((MOP_Radio.ItemIndex = 1) and (Length(Bank.Text)<1) and (length(CheckNumber.Text)<=6)) then
+     begin
+        messagedlg('Invalid chek details entry..',mtError,[mbOK],0);
+        Bank.SetFocus;
+        exit;
+     end;
+
+   end;
+end;
+
+procedure TposFrm.CheckNumberKeyPress(Sender: TObject; var Key: Char);
+begin
+  If Key = #13 then
+   begin
+     Perform(CM_DIALOGKEY,VK_TAB,0);
+     Key := #0;
+   end;
+end;
+
+procedure TposFrm.close_btnClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TposFrm.CRDBGrid1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if key = #13 then
+  AdvSmoothButton27Click(Sender);
+end;
+
+procedure TposFrm.CRDBGrid2DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+      //'Not Posted','Posted'
+      if collectionPostedQpost.Text= 'Not Posted' then
+      begin
+        CRDBGrid2.Canvas.Font.Color:=clBlack;
+        CRDBGrid2.Canvas.Brush.Color:=$007A77F7;
+      end;
+      if DataCol = 5 then
+       CRDBGrid2.DefaultDrawColumnCell
+         (Rect, DataCol, Column, State);
+
+end;
+
+procedure TposFrm.customer_btnClick(Sender: TObject);
+begin
+  if not assigned(customerDetails_frm) then
+  customerDetails_frm := TcustomerDetails_frm.Create(Application);
+
+  customerDetails_frm.ShowModal;
+
+end;
+
+procedure TposFrm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ Action := caFree;
+ posFrm := nil;
+
+  mainFrm.isLog := true;
+  mainFrm.Show;
+
+
+end;
+
+procedure TposFrm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+ cash_tmp:Double;
+begin
+ Case key of
+    vk_f1: Begin
+        if tenders_btn.Enabled then
+        tenders_btnClick(Sender);
+    End;
+
+    vk_f2:begin
+
+         if orNumber_s.Caption ='' then
+         exit;
+
+         if ((MOP_Radio.ItemIndex = 1) and (Length(Bank.Text)<1) and (length(CheckNumber.Text)<=6)) then
+         begin
+            messagedlg('Invalid chek details entry..',mtError,[mbOK],0);
+            Bank.SetFocus;
+            exit;
+         end;
+
+         if (strtofloat(stringreplace(cash.Text, ',', '', [rfReplaceAll, rfIgnoreCase]) )<1) then
+         begin
+           messagedlg('Please check amount tendered..',mtError,[mbOK],0);
+           cash.SetFocus;
+           exit;
+         end;
+
+        tamountPaidQ.Close;
+        tamountPaidQ.ParamByName('JONumber').Text := joNumber_tf.Text;
+        tamountPaidQ.Open;
+
+        if (MOP_Radio.ItemIndex = 1) then
+        begin
+          bank_tf.Text        := Bank.Text;
+          checkNumber_tf.Text := CheckNumber.Text;
+          checkdate_dp.Date   := CheckDate.Date;
+        end;
+
+        cash_tmp              := strtofloat(stringreplace(cash.Text, ',', '', [rfReplaceAll, rfIgnoreCase]) );
+        amountPaid_lb.Caption := formatFloat('###,###,##0.00', cash_tmp );
+        Allpayment_lb.Text    := formatFloat('###,###,##0.00',tamountPaidQAmountPaid.AsFloat + cash_tmp);
+        isTender              := true;
+
+        if MOP_Radio.ItemIndex = 1 then
+        ischeck               := true;
+
+        PaymentPanel.Visible := false;
+        AdvPanel3.Enabled    := true;
+
+        tenders_btn.Enabled  := false;
+        printR_btn.Enabled   := true;
+    end;
+
+    vk_f3:begin
+        if printR_btn.Enabled then
+        printR_btnClick(Sender);
+
+    end;
+
+    vk_f4:begin
+        if cancelR_btn.Enabled then
+        cancelR_btnClick(Sender);
+    end;
+
+    vk_f5:exitSales_btnClick(Sender);
+    vk_f7:begin
+      isTender             := false;
+      PaymentPanel.Visible := false;
+      AdvPanel3.Enabled    := true;
+    end;
+    vk_f10:AdvSmoothButton29Click(Sender);
+    vk_f12:begin
+      {AdvDateTimePicker2.Date := StartOfTheMonth(now);
+      AdvDateTimePicker3.Date := EndOfTheMonth(now);
+      AdvComboBox1.ItemIndex  := 0;
+
+      collectionPostedQ.Close;
+      collectionPostedQ.MacroByName('posted').Active   := false;
+      collectionPostedQ.MacroByName('unposted').Active := false;
+      collectionPostedQ.ParamByName('dateFrom').AsDate := AdvDateTimePicker2.Date;
+      collectionPostedQ.ParamByName('dateTo').AsDate   := AdvDateTimePicker3.Date;
+      collectionPostedQ.Open;
+
+
+
+      NxHeaderPanel4.Top  := 97;
+      NxHeaderPanel4.Left := 118;
+      NxHeaderPanel4.BringToFront;
+      NxHeaderPanel4.Visible  := true;
+      AdvPanel3.Enabled  := false; }
+
+    end;
+ End;
+end;
+
+procedure TposFrm.FormShow(Sender: TObject);
+begin
+  AdvPanel3.Enabled   := false;
+  NxHeaderPanel1.top  := 150;
+  NxHeaderPanel1.Left := 305;
+  NxHeaderPanel1.BringToFront;
+  NxHeaderPanel1.Visible := true;
+
+  usersQ.Close;
+  usersQ.ParamByName('ID').Text := DataModl.usersQuserID.Text;
+  usersQ.Open;
+
+
+  AdvLUEdit2.Text         := DataModl.usersQuserID.Text;
+  AdvLUEdit4.Text         := DataModl.usersQname.Text;
+  AdvDateTimePicker1.Date := now;
+  AdvLUEdit5.Text         := usersQorNumber.Text;
+end;
+
+procedure TposFrm.ID_cancel_tfKeyPress(Sender: TObject; var Key: Char);
+begin
+ If Key = #13 then
+   begin
+     Perform(CM_DIALOGKEY,VK_TAB,0);
+     Key := #0;
+   end;
+end;
+
+procedure TposFrm.MOP_RadioClick(Sender: TObject);
+begin
+  case MOP_Radio.ItemIndex of
+    0:begin
+      PD_Radio.Enabled := false;
+      Bank.Text := '';
+      CheckNumber.Text := '';
+    end;
+    1: PD_Radio.Enabled := true;
+  end;
+end;
+
+procedure TposFrm.pass_cancel_tfKeyPress(Sender: TObject; var Key: Char);
+begin
+ If Key = #13 then
+   begin
+     Perform(CM_DIALOGKEY,VK_TAB,0);
+     Key := #0;
+   end;
+end;
+
+procedure TposFrm.printR_btnClick(Sender: TObject);
+var
+ s     :String;
+ dt    :TDateTime;
+ orNo  :Integer;
+ amntP :Double;
+begin
+
+  dt := now;
+  orNo := strtoint(orNumber_tf.Text);
+  insertCollectionQ.MacroByName('check').Active   := false;
+  insertCollectionQ.MacroByName('nocheck').Active := true;
+
+
+  if isCheck then
+  begin
+    insertCollectionQ.MacroByName('check').Active   := true;
+    insertCollectionQ.MacroByName('nocheck').Active := false;
+  end;
+
+  insertCollectionQ.ParamByName('datepaid').AsDateTime := dt;
+  insertCollectionQ.ParamByName('ORnumber').Text       := orNumber_tf.Text +'-'+cashierID_tf.Text;
+  insertCollectionQ.ParamByName('orNo').Text           := orNumber_tf.Text;
+  insertCollectionQ.ParamByName('idCustomer').Text     := idCustomer;
+  insertCollectionQ.ParamByName('amount').AsFloat      := strtofloat(stringreplace(amountPaid_lb.Caption, ',', '',
+                                                                     [rfReplaceAll, rfIgnoreCase]) );
+  insertCollectionQ.ParamByName('collectorID').Text    := cashierID_tf.Text;
+  insertCollectionQ.ParamByName('Customer').Text       := name_tf.Text;
+  insertCollectionQ.ParamByName('Address').Text        := address_tf.Text;
+  insertCollectionQ.ParamByName('joNumber').Text       := joNumber_tf.Text;
+  insertCollectionQ.ParamByName('idJO').Text           := idjo;
+  insertCollectionQ.ParamByName('isCheck').AsBoolean   := isCheck;
+  insertCollectionQ.ParamByName('batch').Text          := batch_tf.Text;
+
+  if isCheck then
+  begin
+    insertCollectionQ.ParamByName('dateCheck').AsDate    := checkdate_dp.Date;
+    insertCollectionQ.ParamByName('checkNumber').Text    := checkNumber_tf.Text;
+    insertCollectionQ.ParamByName('bankCode').Text       := bank_tf.Text;
+  end;
+
+  insertCollectionQ.Execute;
+
+  updateUsersQ.ParamByName('orNumber').AsInteger := orNo+1;
+  updateUsersQ.ParamByName('ID').Text            := cashierID_tf.Text;
+  updateUsersQ.Execute;
+
+
+  orNumber_tf.Text := inttostr(orNo+1);
+  date_dp.DateTime := dt;
+
+  //===================================
+  //===Print OR========================
+  amntP := strtofloat(stringreplace(amountPaid_lb.Caption, ',', '',[rfReplaceAll, rfIgnoreCase]) );
+  orReceiptQ.Close;
+  orReceiptQ.ParamByname('name').Text           := name_tf.Text;
+  orReceiptQ.ParamByname('address').Text        := address_tf.Text;
+  orReceiptQ.ParamByname('amountW').Text        := '        '+NTW(true,'Pesos',amntP);
+  orReceiptQ.ParamByname('amount').Text         := FormatFloat('###,###,##0.00',amntP);
+  orReceiptQ.ParamByname('cashier').Text        := cashier_tf.Text;
+
+  if isCheck then
+    orReceiptQ.ParamByname('isCheck').Text      := 'X'
+  else
+    orReceiptQ.ParamByname('isCheck').Text      := '';
+
+  if isCheck = false then
+    orReceiptQ.ParamByname('isCash').Text       := 'X'
+  else
+    orReceiptQ.ParamByname('isCash').Text       := '';
+
+  orReceiptQ.ParamByname('tSales').Text         := tsale_tf.Text;
+  orReceiptQ.ParamByname('totalDue').Text       := tamount_tf.Text;
+  orReceiptQ.ParamByname('joNo').Text           := joNumber_tf.Text;
+  orReceiptQ.ParamByname('date').Text           := FormatDateTime('m/d/yyyy',dt);
+  orReceiptQ.ParamByname('pwdID').Text          := pwdNo;
+  orReceiptQ.ParamByname('discount').Text       := discount_tf.Text;
+  orReceiptQ.ParamByname('totalPayment').Text   := Allpayment_lb.Text;
+  orReceiptQ.Open;
+
+  orReceiptReport.PrepareReport;
+  orReceiptReport.PrintOptions.ShowDialog := false;
+  orReceiptReport.ShowReport;
+  //===============================================
+  //===============================================
+
+
+  exitPayment;
+
+  collectionQ.Refresh;
+
+end;
+
+procedure TposFrm.reason_tfKeyPress(Sender: TObject; var Key: Char);
+begin
+ If Key = #13 then
+   begin
+     Key := #0;
+   end;
+end;
+
+procedure TposFrm.Refresh1Click(Sender: TObject);
+begin
+  collectionQ.Refresh;
+  DBAdvGrid1.Refresh;
+end;
+
+procedure TposFrm.sample_btnClick(Sender: TObject);
+begin
+  pressK := true;
+end;
+
+procedure TposFrm.tenders_btnClick(Sender: TObject);
+begin
+  AdvPanel3.Enabled  := false;
+  PaymentPanel.Top   := 114;
+  PaymentPanel.Left  := 281;
+  PaymentPanel.BringToFront;
+
+  PaymentPanel.Visible := true;
+  CheckDate.Date       := now;
+  orNumber_s.Caption   := '';
+  cash.SetFocus;
+end;
+
+procedure TposFrm.Timer1Timer(Sender: TObject);
+begin
+  timeLabel.Caption := FormatDateTime('hh:mm:ss AM/PM',now);
+end;
+
+procedure TposFrm.W7ToolButton1Click(Sender: TObject);
+begin
+  close;
+end;
+
+end.

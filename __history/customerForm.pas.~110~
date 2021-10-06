@@ -1,0 +1,191 @@
+unit customerForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvPanel, Vcl.ExtCtrls, AdvSmoothLabel,
+  Vcl.StdCtrls, AdvEdit, AdvGroupBox, AdvGlassButton, AdvGlowButton,
+  Vcl.ImgList, AdvToolBtn, Vcl.Grids, Vcl.DBGrids, CRGrid, Data.DB, MemDS,
+  DBAccess, MyAccess, Vcl.ComCtrls, AdvDateTimePicker, Vcl.Menus, NxCollection,
+  AdvDBDateTimePicker, advlued, DBAdvLe,DateUtils, AdvSmoothButton;
+
+type
+  TcustomerFrm = class(TForm)
+    AdvPanel1: TAdvPanel;
+    AdvSmoothLabel1: TAdvSmoothLabel;
+    ImageList1: TImageList;
+    AdvPanel2: TAdvPanel;
+    Bevel1: TBevel;
+    Label1: TLabel;
+    AdvEdit1: TAdvEdit;
+    AdvGlowButton1: TAdvGlowButton;
+    AdvPanel3: TAdvPanel;
+    AdvPanelStyler1: TAdvPanelStyler;
+    CRDBGrid1: TCRDBGrid;
+    customerQ: TMyQuery;
+    customerQcustomer_id: TIntegerField;
+    customerQaddress: TStringField;
+    customerQcontactPerson1: TStringField;
+    customerQcontact1: TStringField;
+    customerQcontactPerson2: TStringField;
+    customerQcontact2: TStringField;
+    customerDS: TMyDataSource;
+    customerQname: TStringField;
+    customerQdate: TDateTimeField;
+    customerQuserID: TStringField;
+    PopupMenu1: TPopupMenu;
+    JobOrderHistory1: TMenuItem;
+    NxHeaderPanel1: TNxHeaderPanel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    insertCustQ: TMyQuery;
+    DBAdvLUEdit1: TDBAdvLUEdit;
+    DBAdvLUEdit2: TDBAdvLUEdit;
+    DBAdvLUEdit3: TDBAdvLUEdit;
+    DBAdvLUEdit4: TDBAdvLUEdit;
+    DBAdvLUEdit5: TDBAdvLUEdit;
+    AdvDBDateTimePicker1: TAdvDBDateTimePicker;
+    AdvSmoothButton12: TAdvSmoothButton;
+    AdvSmoothButton13: TAdvSmoothButton;
+    AdvSmoothButton14: TAdvSmoothButton;
+    AdvSmoothButton15: TAdvSmoothButton;
+    AdvSmoothButton16: TAdvSmoothButton;
+    AdvSmoothButton11: TAdvSmoothButton;
+    insertCustTrailQ: TMyQuery;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure AdvGlowButton1Click(Sender: TObject);
+    procedure AdvSmoothButton12Click(Sender: TObject);
+    procedure AdvSmoothButton13Click(Sender: TObject);
+    procedure AdvSmoothButton15Click(Sender: TObject);
+    procedure AdvSmoothButton16Click(Sender: TObject);
+    procedure AdvSmoothButton11Click(Sender: TObject);
+    procedure AdvSmoothButton14Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  customerFrm: TcustomerFrm;
+
+implementation
+
+{$R *.dfm}
+
+uses dataMod, mainForm;
+
+procedure TcustomerFrm.AdvGlowButton1Click(Sender: TObject);
+begin
+  customerQ.Close;
+  customerQ.FilterSQL := // 'date_format(date,''%Y-%m-%d'') between '+quotedstr(FormatDateTime('YYYY-MM-DD',AdvDateTimePicker1.Date))+
+                        //   ' and '+quotedstr(FormatDateTime('YYYY-MM-DD',AdvDateTimePicker2.Date))  +' and '+
+                         'name like '+quotedstr('%'+AdvEdit1.Text+'%');
+  customerQ.Open;
+end;
+
+procedure TcustomerFrm.AdvSmoothButton11Click(Sender: TObject);
+begin
+  customerQ.Cancel;
+
+  AdvPanel3.Enabled := true;
+  AdvPanel2.Enabled := true;
+  CRDBGrid1.Enabled := true;
+  NxHeaderPanel1.Visible := false;
+end;
+
+procedure TcustomerFrm.AdvSmoothButton12Click(Sender: TObject);
+begin
+  AdvPanel3.Enabled := false;
+  AdvPanel2.Enabled := false;
+  CRDBGrid1.Enabled := false;
+
+  AdvDBDateTimePicker1.DateTime := now;
+
+  NxHeaderPanel1.Left := 199;
+  NxHeaderPanel1.Top  := 122;
+  NxHeaderPanel1.BringToFront;
+  NxHeaderPanel1.Visible := true;
+  NxHeaderPanel1.Caption := 'Add Customer';
+
+
+  customerQ.Append;
+
+  //Palawan Pawnshop Dipolog Branch
+end;
+
+procedure TcustomerFrm.AdvSmoothButton13Click(Sender: TObject);
+begin
+  AdvPanel3.Enabled := false;
+  AdvPanel2.Enabled := false;
+  CRDBGrid1.Enabled := false;
+
+  NxHeaderPanel1.Left := 199;
+  NxHeaderPanel1.Top  := 122;
+  NxHeaderPanel1.BringToFront;
+  NxHeaderPanel1.Visible := true;
+  NxHeaderPanel1.Caption := 'Update Customer';
+
+  customerQ.Edit;
+end;
+
+procedure TcustomerFrm.AdvSmoothButton14Click(Sender: TObject);
+begin
+  if (mainFrm.userType_L.Caption<>'Admin') OR (mainFrm.userType_L.Caption<>'Supervisor') then
+   begin
+     EXIT;
+   end;
+
+  if (MessageDlg('Customer Name : '+customerQname.Text +#13+'Continue to delete selected Customer?', mtConfirmation, [mbYes, mbNo], 0) = mrNo) then  exit;
+
+  insertCustTrailQ.ParamByName('id').Text             := customerQcustomer_id.Text;
+  insertCustTrailQ.ParamByName('userID').Text         := mainFrm.userid_L.Caption;
+  insertCustTrailQ.ParamByName('dateExecuted').AsDate := now;
+  insertCustTrailQ.Execute;
+
+  customerQ.Delete;
+end;
+
+procedure TcustomerFrm.AdvSmoothButton15Click(Sender: TObject);
+begin
+    close;
+end;
+
+procedure TcustomerFrm.AdvSmoothButton16Click(Sender: TObject);
+begin
+   customerQ.Post;
+
+   messagedlg('Customer record successfully saved..',mtInformation,[mbOK],0);
+   customerQ.RefreshRecord;
+
+  AdvPanel3.Enabled := true;
+  AdvPanel2.Enabled := true;
+  CRDBGrid1.Enabled := true;
+  NxHeaderPanel1.Visible := false;
+end;
+
+procedure TcustomerFrm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ Action := caFree;
+ customerFrm := Nil;
+end;
+
+procedure TcustomerFrm.FormShow(Sender: TObject);
+begin
+  customerQ.Close;
+  customerQ.FilterSQL := // 'date_format(date,''%Y-%m-%d'') between '+quotedstr(FormatDateTime('YYYY-MM-DD',AdvDateTimePicker1.Date))+
+                        //   ' and '+quotedstr(FormatDateTime('YYYY-MM-DD',AdvDateTimePicker2.Date))  +' and '+
+                         'name like '+quotedstr('%'+AdvEdit1.Text+'%');
+  customerQ.Open;
+end;
+
+end.
+
+

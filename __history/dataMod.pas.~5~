@@ -1,0 +1,35 @@
+unit dataMod;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, DBAccess, MyAccess, MemDS;
+
+type
+  TDataM = class(TDataModule)
+    MyConnection1: TMyConnection;
+    joQ: TMyQuery;
+    joQidjo: TIntegerField;
+    joQJONumber: TIntegerField;
+    joQdate: TDateTimeField;
+    joQuserName: TStringField;
+    joQcustomerID: TIntegerField;
+    joQcustomer: TStringField;
+    joQRemarks: TStringField;
+    usersQ: TMyQuery;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DataM: TDataM;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+end.

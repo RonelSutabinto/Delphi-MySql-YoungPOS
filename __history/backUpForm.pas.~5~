@@ -1,0 +1,55 @@
+unit backUpForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AdvSmoothButton, NxCollection,
+  Vcl.StdCtrls, Vcl.ExtCtrls, AdvPanel;
+
+type
+  TbackUpFrm = class(TForm)
+    AdvPanel4: TAdvPanel;
+    Label11: TLabel;
+    NxHeaderPanel1: TNxHeaderPanel;
+    Label12: TLabel;
+    AdvSmoothButton7: TAdvSmoothButton;
+    procedure AdvSmoothButton7Click(Sender: TObject);
+    procedure BackupDB(const DBName: String);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  backUpFrm: TbackUpFrm;
+
+implementation
+
+{$R *.dfm}
+
+procedure TbackUpFrm.BackupDB(const DBName: String);
+var
+  FileName,
+  Sql : String;
+begin
+  FileName := scBackUpPath + DBName + scBackUpExtn;
+  Sql := 'backup database %s to disk = ''%s''';
+  Sql := Format(Sql, [DBName, FileName]);
+  Log('Backing up ' + DBName + ' using SQL: ' + Sql);
+  try
+    Screen.Cursor := crHourGlass;
+    Update;
+    FDConnection1.ExecSQL(Sql);
+    Log('Done');
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+procedure TbackUpFrm.AdvSmoothButton7Click(Sender: TObject);
+begin
+  Close;
+end;
+
+end.

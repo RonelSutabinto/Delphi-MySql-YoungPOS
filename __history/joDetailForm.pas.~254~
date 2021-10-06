@@ -1,0 +1,562 @@
+unit joDetailForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ImgList, AdvPanel, AdvGlowButton,
+  Vcl.StdCtrls, AdvEdit, Vcl.Grids, Vcl.DBGrids, CRGrid, AdvSmoothLabel,
+  Vcl.ExtCtrls, Data.DB, DBAccess, MyAccess, MemDS, Vcl.DBCtrls, advlued,
+  DBAdvLe, NxCollection, AdvSmoothButton, AdvGroupBox;
+
+type
+  TjoDetailFrm = class(TForm)
+    joDetailQ: TMyQuery;
+    joDetailDS: TMyDataSource;
+    AdvPanel1: TAdvPanel;
+    AdvSmoothLabel1: TAdvSmoothLabel;
+    AdvPanel2: TAdvPanel;
+    AdvPanel3: TAdvPanel;
+    AdvPanelStyler1: TAdvPanelStyler;
+    ImageList1: TImageList;
+    DBAdvLUEdit1: TDBAdvLUEdit;
+    Label5: TLabel;
+    Label6: TLabel;
+    DBAdvLUEdit2: TDBAdvLUEdit;
+    DBAdvLUEdit3: TDBAdvLUEdit;
+    Label7: TLabel;
+    Label9: TLabel;
+    DBAdvLUEdit5: TDBAdvLUEdit;
+    Label8: TLabel;
+    DBMemo1: TDBMemo;
+    Label10: TLabel;
+    DBAdvLUEdit4: TDBAdvLUEdit;
+    NxLinkLabel1: TNxLinkLabel;
+    NxLinkLabel2: TNxLinkLabel;
+    NxLinkLabel3: TNxLinkLabel;
+    CRDBGrid1: TCRDBGrid;
+    joQ: TMyQuery;
+    joQDS: TMyDataSource;
+    NxHeaderPanel1: TNxHeaderPanel;
+    AdvGlowButton6: TAdvGlowButton;
+    AdvGlowButton7: TAdvGlowButton;
+    tamountQ: TMyQuery;
+    joQidjo: TIntegerField;
+    joQJONumber: TIntegerField;
+    joQdate: TDateTimeField;
+    joQuserName: TStringField;
+    joQcustomerID: TIntegerField;
+    joQcustomer: TStringField;
+    joQRemarks: TStringField;
+    joQaddress: TStringField;
+    joQcontactNo: TStringField;
+    joQstrTmp: TStringField;
+    insertDetailTrailQ: TMyQuery;
+    totalAmnt_label: TLabel;
+    Label4: TLabel;
+    tamountQamount: TFloatField;
+    joQtamount: TFloatField;
+    tmpQ: TMyQuery;
+    AdvSmoothButton16: TAdvSmoothButton;
+    AdvSmoothButton11: TAdvSmoothButton;
+    AdvGroupBox1: TAdvGroupBox;
+    Label11: TLabel;
+    vat: TAdvLUEdit;
+    discount: TAdvLUEdit;
+    Label1: TLabel;
+    Label12: TLabel;
+    amnt_tf: TAdvLUEdit;
+    qnty_tf: TAdvLUEdit;
+    Label3: TLabel;
+    Label2: TLabel;
+    article_tf: TAdvLUEdit;
+    AdvPanel4: TAdvPanel;
+    AdvPanelStyler2: TAdvPanelStyler;
+    percent_tf: TAdvLUEdit;
+    tamount_tf: TAdvLUEdit;
+    discnt: TAdvLUEdit;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    AdvSmoothButton18: TAdvSmoothButton;
+    AdvSmoothButton13: TAdvSmoothButton;
+    AdvSmoothButton20: TAdvSmoothButton;
+    AdvSmoothButton1: TAdvSmoothButton;
+    AdvSmoothButton2: TAdvSmoothButton;
+    AdvSmoothButton3: TAdvSmoothButton;
+    AdvSmoothButton4: TAdvSmoothButton;
+    AdvSmoothButton5: TAdvSmoothButton;
+    joDetailQidjodetails: TIntegerField;
+    joDetailQidjo: TIntegerField;
+    joDetailQdate: TDateTimeField;
+    joDetailQarticle: TStringField;
+    joDetailQamount: TFloatField;
+    joDetailQusername: TStringField;
+    joDetailQidarticle: TIntegerField;
+    joDetailQamountTotal: TFloatField;
+    joDetailQdiscount: TFloatField;
+    joDetailQvat: TFloatField;
+    insertJODetailQ: TMyQuery;
+    updateJODetailQ: TMyQuery;
+    AdvSmoothButton6: TAdvSmoothButton;
+    joDetailQquantity: TFloatField;
+    joDetailQdscntPertcent: TFloatField;
+    joDetailQvatPercent: TFloatField;
+    procedure NxLinkLabel1Click(Sender: TObject);
+    procedure AdvGlowButton7Click(Sender: TObject);
+    procedure AdvGlowButton6Click(Sender: TObject);
+    procedure NxLinkLabel2Click(Sender: TObject);
+    procedure NxLinkLabel3Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure AdvSmoothButton18Click(Sender: TObject);
+    procedure AdvSmoothButton20Click(Sender: TObject);
+    procedure AdvSmoothButton1Click(Sender: TObject);
+    procedure AdvSmoothButton13Click(Sender: TObject);
+    procedure AdvSmoothButton2Click(Sender: TObject);
+    procedure AdvSmoothButton3Click(Sender: TObject);
+    procedure AdvSmoothButton4Click(Sender: TObject);
+    procedure AdvSmoothButton5Click(Sender: TObject);
+    procedure AdvSmoothButton11Click(Sender: TObject);
+    procedure emptyTF();
+    procedure AdvSmoothButton16Click(Sender: TObject);
+    procedure AdvSmoothButton6Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    var
+     idarticle : Integer;
+  end;
+
+var
+  joDetailFrm: TjoDetailFrm;
+  comptType : String;
+  discount_,vat_:double;
+implementation
+
+{$R *.dfm}
+
+uses articleForm, dataMod, mainForm, jobOrderForm;
+
+procedure TjoDetailFrm.AdvGlowButton6Click(Sender: TObject);
+begin
+{  if StrToInt(DBAdvLUEdit8.Text)<=0 then
+  begin
+    messagedlg('Invalid quantity entry..',mtWarning,[mbOK],0);
+    exit;
+  end;
+
+  if StrToInt(DBAdvLUEdit9.Text)<0 then
+  begin
+    messagedlg('Invalid amount entry..',mtWarning,[mbOK],0);
+    exit;
+  end;
+
+  joDetailQdate.AsDateTime := now;
+  joDetailQidjo.AsInteger  := joQidjo.AsInteger;
+  jodetailQ.post;
+
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('update joborder j set ');
+  tmpQ.SQL.Add('     j.tamount = (Select sum(ifnull(quantity,0)*ifnull(amount,0)) ');
+  tmpQ.SQL.Add('                       from jodetails where idjo = :idjo)');
+  tmpQ.SQL.Add(' where j.idjo = :idjo');
+  tmpQ.ParamByName('idjo').Text := joQidjo.Text;
+  tmpQ.Execute;
+
+  jodetailQ.RefreshRecord;
+
+  tamountQ.Close;
+  tamountQ.ParamByName('idjo').AsInteger := joQidjo.AsInteger;
+  tamountQ.Open;
+
+  totalAmnt_label.Caption := tamountQamount.Text;
+
+  AdvPanel2.Enabled  := true;
+  CRDBGrid1.Enabled  := true;
+  AdvPanel3.Enabled  := true;
+  NxHeaderPanel1.Visible := false;
+   }
+  //FormShow(Sender)
+end;
+
+procedure TjoDetailFrm.AdvGlowButton7Click(Sender: TObject);
+begin
+{  jodetailQ.Cancel;
+  AdvPanel2.Enabled  := true;
+  CRDBGrid1.Enabled  := true;
+  AdvPanel3.Enabled  := true;
+  NxHeaderPanel1.Visible := false;  }
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton11Click(Sender: TObject);
+begin
+  AdvPanel2.Enabled  := true;
+  CRDBGrid1.Enabled  := true;
+  AdvPanel3.Enabled  := true;
+  NxHeaderPanel1.Visible := false;
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton13Click(Sender: TObject);
+begin
+  discount.Text := '0';
+  vat.Text      := '0';
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton16Click(Sender: TObject);
+begin
+   if strtofloat(stringreplace(qnty_tf.Text, ',', '',[rfReplaceAll, rfIgnoreCase]) )<=0 then
+  begin
+    messagedlg('Invalid quantity entry..',mtWarning,[mbOK],0);
+    exit;
+  end;
+
+  if strtofloat(stringreplace(amnt_tf.Text, ',', '',[rfReplaceAll, rfIgnoreCase]) )<0 then
+  begin
+    messagedlg('Invalid amount entry..',mtWarning,[mbOK],0);
+    exit;
+  end;
+
+  if NxHeaderPanel1.Caption = 'Add Detail' then
+  begin
+    insertJODetailQ.ParamByName('idjo').AsInteger           := joQidjo.AsInteger;
+    insertJODetailQ.ParamByName('date').AsDateTime          := now;
+    insertJODetailQ.ParamByName('article').Text             := article_tf.Text;
+    insertJODetailQ.ParamByName('quantity').AsFloat         := strtofloat(stringreplace(qnty_tf.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    insertJODetailQ.ParamByName('amount').AsFloat           := strtofloat(stringreplace(amnt_tf.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    insertJODetailQ.ParamByName('discount').AsFloat         := strtofloat(stringreplace(discount.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    insertJODetailQ.ParamByName('vat').AsFloat              := strtofloat(stringreplace(vat.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    insertJODetailQ.ParamByName('username').Text            := mainFrm.userid_L.Caption;
+    insertJODetailQ.ParamByName('idarticle').AsInteger      := idarticle;
+    insertJODetailQ.ParamByName('dscntPertcent').AsFloat    := discount_;
+    insertJODetailQ.ParamByName('vatPercent').AsFloat       := vat_;
+    insertJODetailQ.Execute;
+  end
+  else if NxHeaderPanel1.Caption = 'Update Detail' then
+  begin
+    updateJODetailQ.ParamByName('date').AsDateTime          := now;
+    updateJODetailQ.ParamByName('article').Text             := article_tf.Text;
+    updateJODetailQ.ParamByName('quantity').AsInteger       := StrToInt(stringreplace(qnty_tf.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    updateJODetailQ.ParamByName('amount').AsFloat           := strtofloat(stringreplace(amnt_tf.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    updateJODetailQ.ParamByName('discount').AsFloat         := strtofloat(stringreplace(discount.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    updateJODetailQ.ParamByName('vat').AsFloat              := strtofloat(stringreplace(vat.Text, ',', '',
+                                                                             [rfReplaceAll, rfIgnoreCase]) );
+    updateJODetailQ.ParamByName('username').Text            := mainFrm.userid_L.Caption;
+    updateJODetailQ.ParamByName('idarticle').AsInteger      := idarticle;
+    updateJODetailQ.ParamByName('idjodetail').AsInteger     := joDetailQidjodetails.AsInteger;
+    updateJODetailQ.ParamByName('dscntPertcent').AsFloat    := discount_;
+    updateJODetailQ.ParamByName('vatPercent').AsFloat       := vat_;
+
+    updateJODetailQ.Execute;
+  end;
+
+  messagedlg('JO detail successfully saved..',mtInformation,[mbOK],0);
+
+  joDetailQ.Refresh;
+  tamountQ.Close;
+  tamountQ.ParamByName('idjo').AsInteger := joDetailQidjo.AsInteger;
+  tamountQ.Open;
+
+  totalAmnt_label.Caption := tamountQamount.Text;
+
+
+  AdvPanel2.Enabled  := true;
+  CRDBGrid1.Enabled  := true;
+  AdvPanel3.Enabled  := true;
+  NxHeaderPanel1.Visible := false;
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton18Click(Sender: TObject);
+var
+  p,amnt_tmp,dscnt_tmp,qnty_tmp :double;
+
+begin
+  if comptType = 'Discount' then
+  begin
+    discount.Text := stringreplace(discnt.Text, ',', '',[rfReplaceAll, rfIgnoreCase]); //discnt.Text;
+
+    //if strtofloat(stringreplace(vat.Text, ',', '',[rfReplaceAll, rfIgnoreCase]) )>0 then
+    // begin
+    //     p         := vat_;
+
+         //=======================
+         {
+         try
+           amnt_tmp  := strtofloat(stringreplace(amnt_tf.Text, ',', '',
+                                   [rfReplaceAll, rfIgnoreCase]) );
+         except
+           amnt_tmp  := strtofloat(stringreplace(amnt_tf.Text+'.0', ',', '',
+                                   [rfReplaceAll, rfIgnoreCase]) );
+         end;
+         //=======================
+
+         try
+          qnty_tmp  := strtoInt(stringreplace(qnty_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+         except
+          qnty_tmp  := strtoInt(stringreplace(qnty_tf.Text+'.0', ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+         end;
+         //=======================
+         try
+            dscnt_tmp := strtofloat(stringreplace(discnt.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+         except
+            dscnt_tmp := strtofloat(stringreplace(discnt.Text+'.0', ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+         end;
+
+         vat.Text := formatFloat('####0.00', (qnty_tmp*amnt_tmp-dscnt_tmp)*(p/(100+p)));
+          }
+    end;
+
+  end
+  else if comptType = 'vat' then
+    vat.Text := discnt.Text;
+
+   AdvPanel4.Visible         := false;
+   AdvGroupBox1.Enabled      := true;
+   AdvSmoothButton16.Enabled := true;
+  AdvSmoothButton11.Enabled  := true;
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton1Click(Sender: TObject);
+var
+  qnty_tmp,amnt_tmp,dscnt_tmp :Double;
+begin
+  comptType := 'vat';
+  Label16.Caption := 'vat';
+  percent_tf.Text := '12';
+
+  if vat_<>0 then
+  percent_tf.Text := floattostr(vat_);
+
+  amnt_tmp := strtofloat(stringreplace(amnt_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  qnty_tmp := strtofloat(stringreplace(qnty_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  dscnt_tmp:= strtofloat(stringreplace(discount.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+
+  tamount_tf.Text := formatFloat('###,###,##0.00',amnt_tmp*qnty_tmp-dscnt_tmp);
+  discnt.Text     := '0';
+
+  AdvPanel4.Top   := 40;
+  AdvPanel4.Left  := 12;
+  AdvPanel4.BringToFront;
+  AdvGroupBox1.Enabled := false;
+  AdvPanel4.Visible    := true;
+  AdvSmoothButton16.Enabled := false;
+  AdvSmoothButton11.Enabled := false;
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton20Click(Sender: TObject);
+var
+  qnty_tmp,amnt_tmp,dscnt_tmp :Double;
+begin
+  comptType       := 'Discount';
+  Label16.Caption := 'Discount';
+  percent_tf.Text := '5';
+
+  if discount_<>0 then
+  percent_tf.Text := floattostr(discount_);
+
+
+  amnt_tmp := strtofloat(stringreplace(amnt_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  qnty_tmp := strtofloat(stringreplace(qnty_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  dscnt_tmp:= strtofloat(stringreplace(discount.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+
+  tamount_tf.Text := formatFloat('###,###,##0.00',amnt_tmp*qnty_tmp-dscnt_tmp);
+  discnt.Text     := '0';
+
+  AdvPanel4.Top   := 40;
+  AdvPanel4.Left  := 12;
+  AdvPanel4.BringToFront;
+  AdvGroupBox1.Enabled := false;
+  AdvPanel4.Visible    := true;
+  AdvSmoothButton16.Enabled := false;
+  AdvSmoothButton11.Enabled := false;
+
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton2Click(Sender: TObject);
+begin
+  vat.Text := '0';
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton3Click(Sender: TObject);
+begin
+  if not assigned(articleFrm) then
+  articleFrm := TarticleFrm.Create(Application);
+
+  articleFrm.Show;
+
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton4Click(Sender: TObject);
+var
+  p,ta :double;
+begin
+  p  := strtofloat(stringreplace(percent_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  ta := strtofloat(stringreplace(tamount_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  if comptType = 'Discount' then
+  begin
+    discnt.Text := formatFloat('###,###,##0.00',ta*(p/(100)) );
+    discount_   := strtofloat(stringreplace(percent_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  end
+  else if comptType = 'vat' then
+  begin
+    discnt.Text := formatFloat('###,###,##0.00',ta*(p/(100+p)) );
+    vat_   := strtofloat(stringreplace(percent_tf.Text, ',', '',
+                                 [rfReplaceAll, rfIgnoreCase]) );
+  end;
+
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton5Click(Sender: TObject);
+begin
+  AdvPanel4.Visible    := false;
+  AdvGroupBox1.Enabled := true;
+  AdvSmoothButton16.Enabled := true;
+  AdvSmoothButton11.Enabled := true;
+
+end;
+
+procedure TjoDetailFrm.AdvSmoothButton6Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TjoDetailFrm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if not assigned(joborderFrm) then
+  joborderFrm := TjoborderFrm.Create(Application);
+
+  joborderFrm.joQ.Refresh;
+
+  Action := caFree;
+  joDetailFrm := nil;
+
+end;
+
+procedure TjoDetailFrm.FormShow(Sender: TObject);
+begin
+  tamountQ.Close;
+  tamountQ.ParamByName('idjo').AsInteger := joDetailQidjo.AsInteger;
+  tamountQ.Open;
+
+  totalAmnt_label.Caption := tamountQamount.Text;
+  idarticle := 0;
+end;
+
+procedure TjoDetailFrm.NxLinkLabel1Click(Sender: TObject);
+begin
+  AdvPanel2.Enabled := false;
+  CRDBGrid1.Enabled := false;
+  AdvPanel3.Enabled := false;
+
+  NxHeaderPanel1.Top  := 149;
+  NxHeaderPanel1.Left := 166;
+  NxHeaderPanel1.BringToFront;
+  NxHeaderPanel1.Visible := true;
+
+  NxHeaderPanel1.Caption := 'Add Detail';
+  emptyTF;
+
+  vat_     := 0.00;
+  discount_:= 0.00;
+  discount.Text := '0.00';
+end;
+procedure TjoDetailFrm.emptyTF();
+begin
+  idarticle       := 0;
+  article_tf.Text := '';
+  qnty_tf.Text    := '';
+  amnt_tf.Text    := '';
+  discount.Text   := '';
+  vat.Text        := '';
+
+end;
+procedure TjoDetailFrm.NxLinkLabel2Click(Sender: TObject);
+begin
+  AdvPanel2.Enabled := false;
+  CRDBGrid1.Enabled := false;
+  AdvPanel3.Enabled := false;
+
+  NxHeaderPanel1.Top  := 149;
+  NxHeaderPanel1.Left := 166;
+  NxHeaderPanel1.BringToFront;
+  NxHeaderPanel1.Visible := true;
+
+  NxHeaderPanel1.Caption := 'Update Detail';
+  emptyTF;
+
+  idarticle       := joDetailQidarticle.AsInteger;
+  article_tf.Text := joDetailQarticle.Text;
+  qnty_tf.Text    := formatFloat('######.#',joDetailQquantity.AsFloat);
+  amnt_tf.Text    := formatFloat('###,###,##0.00',joDetailQamount.AsFloat);
+  discount.Text   := formatFloat('###,###,##0.00',joDetailQdiscount.AsFloat);
+  vat.Text        := formatFloat('###,###,##0.00',joDetailQvat.AsFloat);
+  vat_            := joDetailQvatPercent.AsFloat;
+  discount_       := joDetailQdscntPertcent.AsFloat;
+
+
+end;
+
+procedure TjoDetailFrm.NxLinkLabel3Click(Sender: TObject);
+begin
+  if (MessageDlg('Article: '+joDetailQarticle.Text+#13+'Continue to delete the selected Job Order detail?', mtConfirmation, [mbYes, mbNo], 0) = mrNo) then  exit;
+
+  insertDetailTrailQ.ParamByName('idjodetails').AsInteger    := joDetailQidjodetails.AsInteger;
+  insertDetailTrailQ.ParamByName('idjo').AsInteger          := joDetailQidjo.AsInteger;
+  insertDetailTrailQ.ParamByName('date').AsDateTime         := joDetailQdate.AsDateTime;
+  insertDetailTrailQ.ParamByName('article').Text            := joDetailQarticle.Text;
+  insertDetailTrailQ.ParamByName('quantity').AsFloat        := joDetailQquantity.AsFloat;
+  insertDetailTrailQ.ParamByName('amount').AsFloat          := joDetailQamount.AsFloat;
+  insertDetailTrailQ.ParamByName('username').Text           := joDetailQusername.Text;
+  insertDetailTrailQ.ParamByName('idarticle').AsInteger     := joDetailQidarticle.AsInteger;
+  insertDetailTrailQ.ParamByName('dateExecuted').AsDateTime := now;
+  insertDetailTrailQ.ParamByName('executedBy').Text         := '';
+  insertDetailTrailQ.ParamByName('discount').AsFloat        := joDetailQdiscount.AsFloat;
+  insertDetailTrailQ.ParamByName('vat').AsFloat             := joDetailQvat.AsFloat;
+  insertDetailTrailQ.ParamByName('dscntPertcent').AsFloat   := joDetailQdscntPertcent.AsFloat;
+  insertDetailTrailQ.ParamByName('vatPercent').AsFloat      := joDetailQvatPercent.AsFloat;
+  insertDetailTrailQ.Execute;
+
+  joDetailQ.Delete;
+
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('update joborder j set ');
+  tmpQ.SQL.Add('     j.tamount = (Select sum(ifnull(quantity,0)*ifnull(amount,0)) ');
+  tmpQ.SQL.Add('                       from jodetails where idjo = :idjo)');
+  tmpQ.SQL.Add(' where j.idjo = :idjo');
+  tmpQ.ParamByName('idjo').Text := joQidjo.Text;
+  tmpQ.Execute;
+
+  tamountQ.Close;
+  tamountQ.ParamByName('idjo').AsInteger := joQidjo.AsInteger;
+  tamountQ.Open;
+
+  totalAmnt_label.Caption := tamountQamount.Text;
+
+
+end;
+
+end.

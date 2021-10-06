@@ -1,0 +1,285 @@
+unit deliveryDetailsForm;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, AdvDateTimePicker,
+  Vcl.ExtCtrls, AdvPanel, NxCollection, Vcl.StdCtrls, Vcl.DBCtrls, DBAdvLe,
+  Vcl.Grids, Vcl.DBGrids, CRGrid, AdvEdit, advlued, AdvGroupBox,
+  AdvSmoothButton, AdvGlowButton, AdvSmoothLabel, Data.DB, MemDS, DBAccess,
+  MyAccess, CRDBGrid1;
+
+type
+  TdeliveryDetailsFrm = class(TForm)
+    AdvPanel1: TAdvPanel;
+    AdvSmoothLabel1: TAdvSmoothLabel;
+    NxHeaderPanel1: TNxHeaderPanel;
+    AdvGlowButton1: TAdvGlowButton;
+    AdvGlowButton2: TAdvGlowButton;
+    AdvSmoothButton7: TAdvSmoothButton;
+    AdvSmoothButton8: TAdvSmoothButton;
+    AdvGroupBox1: TAdvGroupBox;
+    Label11: TLabel;
+    Label1: TLabel;
+    Label12: TLabel;
+    Label3: TLabel;
+    Label2: TLabel;
+    vat: TAdvLUEdit;
+    discount: TAdvLUEdit;
+    amnt_tf: TAdvLUEdit;
+    qnty_tf: TAdvLUEdit;
+    article_tf: TAdvLUEdit;
+    AdvSmoothButton9: TAdvSmoothButton;
+    AdvSmoothButton10: TAdvSmoothButton;
+    AdvSmoothButton1: TAdvSmoothButton;
+    AdvSmoothButton2: TAdvSmoothButton;
+    AdvSmoothButton3: TAdvSmoothButton;
+    AdvPanel2: TAdvPanel;
+    CRDBGrid1: TCRDBGrid;
+    AdvPanel3: TAdvPanel;
+    NxLinkLabel2: TNxLinkLabel;
+    NxLinkLabel3: TNxLinkLabel;
+    NxLinkLabel4: TNxLinkLabel;
+    NxLinkLabel1: TNxLinkLabel;
+    AdvSmoothButton4: TAdvSmoothButton;
+    AdvPanelStyler1: TAdvPanelStyler;
+    AdvPanelStyler2: TAdvPanelStyler;
+    NxHeaderPanel2: TNxHeaderPanel;
+    AdvSmoothButton5: TAdvSmoothButton;
+    AdvSmoothButton6: TAdvSmoothButton;
+    ID_Customer: TAdvLUEdit;
+    Label14: TLabel;
+    amountTF: TAdvLUEdit;
+    quantityTF: TAdvLUEdit;
+    Label15: TLabel;
+    Label16: TLabel;
+    articleTF: TAdvLUEdit;
+    AdvSmoothButton11: TAdvSmoothButton;
+    Label4: TLabel;
+    Label5: TLabel;
+    delNo_tf: TAdvLUEdit;
+    joNumber_tf: TAdvLUEdit;
+    Label6: TLabel;
+    Label7: TLabel;
+    datePick: TAdvDateTimePicker;
+    deliveredBy_tf: TAdvLUEdit;
+    remark_memo: TRichEdit;
+    Label8: TLabel;
+    AdvGroupBox2: TAdvGroupBox;
+    deliveryQ: TMyQuery;
+    deliveryQiddelivery: TIntegerField;
+    deliveryQnoDelivery: TIntegerField;
+    deliveryQdeliverydate: TDateField;
+    deliveryQdeliveredBy: TStringField;
+    deliveryQjoNo: TIntegerField;
+    deliveryQidjo: TIntegerField;
+    deliveryQremarks: TStringField;
+    deliveryQusername: TStringField;
+    deliveryQreceievedBy: TStringField;
+    deliveryDetailQ: TMyQuery;
+    deliveryDetailQiddeliverydtls: TIntegerField;
+    deliveryDetailQdeliveryno: TIntegerField;
+    deliveryDetailQiddelivery: TIntegerField;
+    deliveryDetailQidjo: TIntegerField;
+    deliveryDetailQdate: TDateTimeField;
+    deliveryDetailQarticle: TStringField;
+    deliveryDetailQquantity: TFloatField;
+    deliveryDetailQamount: TFloatField;
+    deliveryDetailQjono: TIntegerField;
+    deliveryDetailQidjodetails: TIntegerField;
+    deliveryDetailDS: TMyDataSource;
+    NxHeaderPanel3: TNxHeaderPanel;
+    AdvLUEdit1: TAdvLUEdit;
+    AdvSmoothButton12: TAdvSmoothButton;
+    AdvSmoothButton13: TAdvSmoothButton;
+    CRDBGrid11: TCRDBGrid1;
+    jodetailsQ: TMyQuery;
+    jodetailsDS: TMyDataSource;
+    jodetailsQarticle: TStringField;
+    jodetailsQquantity: TFloatField;
+    jodetailsQamount: TFloatField;
+    jodetailsQidjo: TIntegerField;
+    jodetailsQidjodetails: TIntegerField;
+    insertdeliveryDetailsQ: TMyQuery;
+    updateDeliverydetailQ: TMyQuery;
+    tmpQ: TMyQuery;
+    clearDetailsQ: TMyQuery;
+    deleteArticleQ: TMyQuery;
+    procedure FormShow(Sender: TObject);
+    procedure AdvSmoothButton12Click(Sender: TObject);
+    procedure NxLinkLabel2Click(Sender: TObject);
+    procedure AdvSmoothButton6Click(Sender: TObject);
+    procedure AdvSmoothButton5Click(Sender: TObject);
+    procedure NxLinkLabel3Click(Sender: TObject);
+    procedure AdvSmoothButton11Click(Sender: TObject);
+    procedure AdvSmoothButton13Click(Sender: TObject);
+    procedure AdvSmoothButton4Click(Sender: TObject);
+    procedure NxLinkLabel4Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  deliveryDetailsFrm: TdeliveryDetailsFrm;
+
+  idjodetails_ :String;
+
+
+
+implementation
+
+{$R *.dfm}
+
+uses dataMod;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton11Click(Sender: TObject);
+begin
+  jodetailsQ.Close;
+  jodetailsQ.ParamByName('idjo').Text := deliveryQidjo.Text;
+  jodetailsQ.Open;
+
+  NxHeaderPanel3.Top  := 121;
+  NxHeaderPanel3.Left := 170;
+  NxHeaderPanel3.BringToFront;
+
+  AdvPanel2.Enabled      := false;
+  NxHeaderPanel3.Visible := true;
+end;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton12Click(Sender: TObject);
+begin
+  amountTF.Text   := jodetailsQamount.Text;
+  articleTF.Text  := jodetailsQarticle.Text;
+  quantityTF.Text := jodetailsQquantity.Text;
+  idjodetails_    := jodetailsQidjodetails.Text;
+
+  AdvPanel2.Enabled      := true;
+  NxHeaderPanel3.Visible := false;
+end;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton13Click(Sender: TObject);
+begin
+  AdvPanel2.Enabled      := true;
+  NxHeaderPanel3.Visible := false;
+end;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton4Click(Sender: TObject);
+begin
+  close;
+end;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton5Click(Sender: TObject);
+begin
+  AdvPanel2.Enabled      := true;
+  NxHeaderPanel2.Visible := false;
+end;
+
+procedure TdeliveryDetailsFrm.AdvSmoothButton6Click(Sender: TObject);
+begin
+  tmpQ.Close;
+  tmpQ.SQL.Clear;
+  tmpQ.SQL.Add('Select ifnull(quantity,0)- (ifnull( (Select sum(ifnull(quantity,0)) as quantity from deliverydtls where iddeliverydtls <> :iddeliverydtls and idjodetails = :idjodetails),0)+:qnty) ) as quantity from jodetails where idjodetails = :idjodetails');
+  tmpQ.ParamByName('idjodetails').Text    := idjodetails_;
+  tmpQ.ParamByName('qnty').AsInteger      := StrToInt(quantityTF.Text);
+  tmpQ.ParamByName('iddeliverydtls').Text := deliveryDetailQiddeliverydtls.Text;
+  tmpQ.Open;
+
+  if ( (tmpQ.FieldByName('quantity').AsInteger - StrToInt(quantityTF.Text))<0 )then
+  begin
+    clearDetailsQ.ParamByName('idjodetails').Text := idjodetails_;
+    clearDetailsQ.Execute;
+
+    messagedlg('Quantity not more than '+tmpQ.FieldByName('quantity').text+'..',mterror,[mbOK],0);
+    exit;
+  end;
+
+
+  if NxHeaderPanel2.Caption  = 'Add Article' then
+  begin
+     insertdeliveryDetailsQ.ParamByName('idjodetails').Text  := idjodetails_;
+     insertdeliveryDetailsQ.ParamByName('idjo').Text         := deliveryQidjo.Text;
+     insertdeliveryDetailsQ.ParamByName('date').AsDate       := now;
+     insertdeliveryDetailsQ.ParamByName('article').Text      := articleTF.Text;
+     insertdeliveryDetailsQ.ParamByName('quantity').AsInteger:= StrToInt(quantityTF.Text);
+     insertdeliveryDetailsQ.ParamByName('amount').Text       := amountTF.Text;
+     insertdeliveryDetailsQ.ParamByName('jono').Text         := deliveryQjoNo.Text;
+     insertdeliveryDetailsQ.ParamByName('deliveryno').Text   := deliveryQnoDelivery.Text;
+     insertdeliveryDetailsQ.ParamByName('iddelivery').Text   := deliveryQiddelivery.Text;
+     insertdeliveryDetailsQ.Execute;
+
+     messagedlg('Delivery article successfully saved..',mtInformation,[mbOK],0);
+  end
+  else if True then
+  begin
+    updateDeliverydetailQ.ParamByName('date').AsDate          := now;
+    updateDeliverydetailQ.ParamByName('quantity').Text        := quantityTF.Text;
+    updateDeliverydetailQ.ParamByName('iddeliverydtls').Text  := deliveryDetailQiddeliverydtls.Text;
+    updateDeliverydetailQ.Execute;
+
+    messagedlg('Delivery article successfully updated..',mtInformation,[mbOK],0);
+  end;
+
+  deliveryDetailQ.Refresh;
+  AdvPanel2.Enabled      := true;
+  NxHeaderPanel2.Visible := false;
+end;
+
+procedure TdeliveryDetailsFrm.FormShow(Sender: TObject);
+begin
+  joNumber_tf.Text     := deliveryQjoNo.Text;
+  delNo_tf.Text        := deliveryQnoDelivery.Text;
+  datePick.Date        := deliveryQdeliverydate.AsDateTime;
+  deliveredBy_tf.Text  := deliveryQdeliveredBy.Text;
+  remark_memo.Text     := deliveryQremarks.Text;
+  idjodetails_         := '';
+
+end;
+
+procedure TdeliveryDetailsFrm.NxLinkLabel2Click(Sender: TObject);
+begin
+  articleTF.Text          := '';
+  quantityTF.Text         := '';
+  amountTF.Text           := '';
+  idjodetails_            := '';
+  NxHeaderPanel2.Caption  := 'Add Article';
+  NxHeaderPanel2.Top  := 216;
+  NxHeaderPanel2.Left := 240;
+  NxHeaderPanel2.BringToFront;
+
+  AdvSmoothButton11.Enabled := true;
+  AdvPanel2.Enabled         := false;
+  NxHeaderPanel2.Visible    := true;
+end;
+
+procedure TdeliveryDetailsFrm.NxLinkLabel3Click(Sender: TObject);
+begin
+  articleTF.Text          := deliveryDetailQarticle.Text;
+  quantityTF.Text         := deliveryDetailQquantity.Text;
+  amountTF.Text           := deliveryDetailQamount.Text;
+  idjodetails_            := deliveryDetailQidjodetails.Text;
+
+  NxHeaderPanel2.Caption  := 'Update Article';
+  NxHeaderPanel2.Top  := 216;
+  NxHeaderPanel2.Left := 240;
+  NxHeaderPanel2.BringToFront;
+
+  AdvSmoothButton11.Enabled := false;
+  AdvPanel2.Enabled         := false;
+  NxHeaderPanel2.Visible    := true;
+end;
+
+procedure TdeliveryDetailsFrm.NxLinkLabel4Click(Sender: TObject);
+begin
+ if (MessageDlg('Article : '+deliveryDetailQarticle.Text +#13+
+                'Continue to delete selected article?',
+                 mtConfirmation, [mbYes, mbNo], 0) = mrNo) then  exit;
+
+ deleteArticleQ.ParamByName('iddeliverydtls').Text := deliveryDetailQiddeliverydtls.Text;
+ deleteArticleQ.Execute;
+ deliveryDetailQ.Refresh;
+end;
+
+end.
